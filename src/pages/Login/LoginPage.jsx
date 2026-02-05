@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 import './LoginPage.css';
 
@@ -8,29 +8,26 @@ export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [usuario, setUsuario] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErro('');
     setLoading(true);
 
     try {
-      // 🔵 CHAMA APENAS O CONTEXT
-      await login(usuario, senha);
-
-      // 🔵 LOGIN OK → DASHBOARD
+      // 🔑 ÚNICA FONTE DE LOGIN
+      await login(email, senha);
       navigate('/');
-
     } catch (err) {
       setErro('Credenciais inválidas');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="login-wrapper">
@@ -47,10 +44,10 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit}>
           <input
-            type="text"
-            placeholder="Usuário ou Email"
-            value={usuario}
-            onChange={e => setUsuario(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             required
           />
 
