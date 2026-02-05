@@ -7,38 +7,31 @@ import {
   limparSessaoOffline
 } from '../lib/offline/authOffline';
 
-// ✅ IMPORTANTE — sync só depois do login
-import { iniciarSyncListener } from '../lib/offline/syncService';
-
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /* =====================================================
-     BOOT (restaurar sessão ao abrir app)
-  ===================================================== */
+  // =========================
+  // BOOT (RESTORE SESSION)
+  // =========================
   useEffect(() => {
     const sessao = obterSessaoOffline();
 
-    if (sessao) {
+    if (sessao?.token && sessao?.usuario) {
       api.defaults.headers.Authorization = `Bearer ${sessao.token}`;
       setUsuario(sessao.usuario);
-
-      // ✅ usuário já logado → pode iniciar sync
-      iniciarSyncListener();
     }
 
     setLoading(false);
   }, []);
 
-  /* =====================================================
-     LOGIN (ONLINE + OFFLINE)
-  ===================================================== */
+  // =========================
+  // LOGIN
+  // =========================
   async function login(usuarioLogin, senha) {
     try {
-      // 🔵 ONLINE
       const { data } = await api.post('/auth/login', {
         usuario: usuarioLogin,
         senha
@@ -49,46 +42,38 @@ export function AuthProvider({ children }) {
 
       salvarSessaoOffline(data.usuario, data.token);
 
-      // ✅ AGORA SIM → iniciar sync
-      iniciarSyncListener();
-
       return true;
 
-    } catch (error) {
-
-      // 🔴 OFFLINE
+    } catch (err) {
+      // fallback OFFLINE
       const sessao = obterSessaoOffline();
 
-      if (sessao && sessao.usuario.usuario === usuarioLogin) {
-        setUsuario(sessao.usuario);
+      if (
+        sessao &&
+        sessao.usuario &&
+        (
+          sessao.usuario.email === usuarioLogin ||
+          sessao.usuario.nome === usuarioLogin
+        )
+      ) {
         api.defaults.headers.Authorization = `Bearer ${sessao.token}`;
-
-        // ✅ offline também pode sincronizar depois
-        iniciarSyncListener();
-
+        setUsuario(sessao.usuario);
         return true;
       }
 
-      throw new Error('Sem internet e usuário não autenticado anteriormente');
+      throw err;
     }
   }
 
-  /* =====================================================
-     LOGOUT
-  ===================================================== */
+  // =========================
+  // LOGOUT
+  // =========================
   function logout() {
     limparSessaoOffline();
     setUsuario(null);
-
     delete api.defaults.headers.Authorization;
-
-    // opcional: recarregar app limpo
-    window.location.href = '/login';
   }
 
-  /* =====================================================
-     PROVIDER
-  ===================================================== */
   return (
     <AuthContext.Provider
       value={{
