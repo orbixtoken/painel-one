@@ -1,4 +1,5 @@
-import { getDB } from './db';
+import { openDB } from './db';
+
 import { criarOrcamento } from '../../api/orcamentos';
 
 /* =========================
@@ -17,7 +18,8 @@ export async function adicionarOrcamentoPendente(payload) {
    SYNC
 ========================= */
 export async function sincronizarOrcamentos() {
-  const db = await getDB();
+  const db = await openDB();
+
   const lista = await db.getAll('orcamentos_pendentes');
 
   for (const item of lista) {
