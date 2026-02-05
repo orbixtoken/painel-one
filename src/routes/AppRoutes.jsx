@@ -41,9 +41,9 @@ import OrcamentoDetalhe from '../pages/Orcamentos/OrcamentoDetalhe';
 //Pages Empresa Config
 import EmpresaConfigPage from '../pages/Empresa/EmpresaConfigPage';
 
-import { iniciarSyncListener } from '../lib/offline/syncService';
+/*import { iniciarSyncListener } from '../lib/offline/syncService';
 
-iniciarSyncListener();
+iniciarSyncListener();*/
 
 export default function AppRoutes() {
   const { autenticado, loading } = useContext(AuthContext);
