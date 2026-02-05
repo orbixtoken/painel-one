@@ -1,14 +1,17 @@
 // =====================================================
-// Arguz Tech - Sync automático
-// Envia pendências quando internet voltar
+// Arguz Tech - Sync automático PROFISSIONAL
 // =====================================================
 
 import { listarOrdensPendentes, limparPendenciasOrdens } from './ordensQueue';
-import api from '../api'; // axios instance
-// ajuste caminho se necessário
+import api from '../api';
 
 let sincronizando = false;
+let listenerIniciado = false;
+let intervalo = null;
 
+/* =====================================================
+   SYNC PRINCIPAL
+===================================================== */
 export async function sincronizarOrdens() {
   if (sincronizando) return;
 
@@ -27,15 +30,29 @@ export async function sincronizarOrdens() {
 
     console.log('✔ Ordens sincronizadas');
   } catch (err) {
-    console.log('Sem internet, sync cancelado');
+    console.log('Sem internet ou erro no sync');
   } finally {
     sincronizando = false;
   }
 }
 
-// escuta reconexão
+/* =====================================================
+   LISTENER GLOBAL
+===================================================== */
 export function iniciarSyncListener() {
-  window.addEventListener('online', () => {
-    sincronizarOrdens();
-  });
+  // ✅ evita múltiplos listeners
+  if (listenerIniciado) return;
+
+  listenerIniciado = true;
+
+  console.log('🔄 Sync listener iniciado');
+
+  // 🔹 roda imediatamente
+  sincronizarOrdens();
+
+  // 🔹 roda ao reconectar
+  window.addEventListener('online', sincronizarOrdens);
+
+  // 🔹 roda a cada 30s (extra segurança)
+  intervalo = setInterval(sincronizarOrdens, 30000);
 }
