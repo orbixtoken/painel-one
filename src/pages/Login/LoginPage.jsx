@@ -8,7 +8,7 @@ export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
+  const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,10 +19,9 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // 🔑 ÚNICA FONTE DE LOGIN
-      await login(email, senha);
+      await login(usuario, senha);
       navigate('/');
-    } catch (err) {
+    } catch {
       setErro('Credenciais inválidas');
     } finally {
       setLoading(false);
@@ -33,21 +32,17 @@ export default function LoginPage() {
     <div className="login-wrapper">
       <div className="login-card">
 
-        <img
-          src="/arguz_logo.png"
-          alt="Arguz Tech"
-          className="login-logo"
-        />
+        <img src="/arguz_logo.png" alt="Arguz Tech" className="login-logo" />
 
         <h1>Arguz One</h1>
         <p className="subtitle">Sistema de gestão inteligente</p>
 
         <form onSubmit={handleSubmit}>
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            type="text"
+            placeholder="Usuário ou Email"
+            value={usuario}
+            onChange={e => setUsuario(e.target.value)}
             required
           />
 
@@ -69,7 +64,6 @@ export default function LoginPage() {
         <footer className="login-footer">
           Produto Arguz Tech • contato@arguztech.com.br
         </footer>
-
       </div>
     </div>
   );

@@ -13,13 +13,10 @@ export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // =========================
-  // BOOT (RESTORE SESSION)
-  // =========================
   useEffect(() => {
     const sessao = obterSessaoOffline();
 
-    if (sessao?.token && sessao?.usuario) {
+    if (sessao) {
       api.defaults.headers.Authorization = `Bearer ${sessao.token}`;
       setUsuario(sessao.usuario);
     }
@@ -27,9 +24,6 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  // =========================
-  // LOGIN
-  // =========================
   async function login(usuarioLogin, senha) {
     try {
       const { data } = await api.post('/auth/login', {
@@ -39,35 +33,14 @@ export function AuthProvider({ children }) {
 
       api.defaults.headers.Authorization = `Bearer ${data.token}`;
       setUsuario(data.usuario);
-
       salvarSessaoOffline(data.usuario, data.token);
 
       return true;
-
-    } catch (err) {
-      // fallback OFFLINE
-      const sessao = obterSessaoOffline();
-
-      if (
-        sessao &&
-        sessao.usuario &&
-        (
-          sessao.usuario.email === usuarioLogin ||
-          sessao.usuario.nome === usuarioLogin
-        )
-      ) {
-        api.defaults.headers.Authorization = `Bearer ${sessao.token}`;
-        setUsuario(sessao.usuario);
-        return true;
-      }
-
-      throw err;
+    } catch {
+      throw new Error('Login inválido');
     }
   }
 
-  // =========================
-  // LOGOUT
-  // =========================
   function logout() {
     limparSessaoOffline();
     setUsuario(null);
