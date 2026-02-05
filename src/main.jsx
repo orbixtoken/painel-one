@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
-
+//
 // 🔴 IMPORTAÇÃO OBRIGATÓRIA DO CSS GLOBAL
 import './styles/global.css';
 

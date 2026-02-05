@@ -2,7 +2,7 @@ import api from '../lib/api';
 
 // Login
 export async function login(email, senha) {
-  const { data } = await api.post('/auth/login', { email, senha });
+  const { data } = await api.post('/api/auth/login', { email, senha });
   return data;
 }
 
