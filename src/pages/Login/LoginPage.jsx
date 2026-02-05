@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
-import api from '../../lib/api';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import './LoginPage.css';
 
@@ -9,31 +8,29 @@ export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
+  const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     setErro('');
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/login', {
-        email,
-        senha
-      });
+      // 🔵 CHAMA APENAS O CONTEXT
+      await login(usuario, senha);
 
-      const { token, usuario } = response.data;
-      login(token, usuario);
+      // 🔵 LOGIN OK → DASHBOARD
       navigate('/');
+
     } catch (err) {
       setErro('Credenciais inválidas');
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div className="login-wrapper">
@@ -50,10 +47,10 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit}>
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            type="text"
+            placeholder="Usuário ou Email"
+            value={usuario}
+            onChange={e => setUsuario(e.target.value)}
             required
           />
 
