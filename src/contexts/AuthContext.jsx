@@ -1,12 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import api from '../lib/api';
 
-import {
-  salvarSessaoOffline,
-  obterSessaoOffline,
-  limparSessaoOffline
-} from '../lib/offline/authOffline';
-
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -14,38 +8,34 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const sessao = obterSessaoOffline();
+    const token = localStorage.getItem('token');
+    const usuarioSalvo = localStorage.getItem('usuario');
 
-    if (sessao) {
-      api.defaults.headers.Authorization = `Bearer ${sessao.token}`;
-      setUsuario(sessao.usuario);
+    if (token && usuarioSalvo) {
+      api.defaults.headers.Authorization = `Bearer ${token}`;
+      setUsuario(JSON.parse(usuarioSalvo));
     }
 
     setLoading(false);
   }, []);
 
-  async function login(usuarioLogin, senha) {
-  try {
+  async function login(email, senha) {
     const { data } = await api.post('/auth/login', {
-      usuario: usuarioLogin,
+      email,
       senha
     });
 
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+
     api.defaults.headers.Authorization = `Bearer ${data.token}`;
     setUsuario(data.usuario);
-    salvarSessaoOffline(data.usuario, data.token);
-
-    return true;
-  } catch (err) {
-    throw err;
   }
-}
-
 
   function logout() {
-    limparSessaoOffline();
-    setUsuario(null);
+    localStorage.clear();
     delete api.defaults.headers.Authorization;
+    setUsuario(null);
   }
 
   return (

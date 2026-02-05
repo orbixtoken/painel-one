@@ -8,7 +8,7 @@ export default function LoginPage() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [usuario, setUsuario] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(usuario, senha);
+      await login(email, senha);
       navigate('/');
     } catch {
       setErro('Credenciais inválidas');
@@ -31,7 +31,6 @@ export default function LoginPage() {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-
         <img src="/arguz_logo.png" alt="Arguz Tech" className="login-logo" />
 
         <h1>Arguz One</h1>
@@ -39,10 +38,10 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit}>
           <input
-            type="text"
-            placeholder="Usuário"
-            value={usuario}
-            onChange={e => setUsuario(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             required
           />
 
