@@ -7,6 +7,9 @@ import {
   limparSessaoOffline
 } from '../lib/offline/authOffline';
 
+// ✅ IMPORTANTE — sync só depois do login
+import { iniciarSyncListener } from '../lib/offline/syncService';
+
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -14,7 +17,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   /* =====================================================
-     BOOT
+     BOOT (restaurar sessão ao abrir app)
   ===================================================== */
   useEffect(() => {
     const sessao = obterSessaoOffline();
@@ -22,6 +25,9 @@ export function AuthProvider({ children }) {
     if (sessao) {
       api.defaults.headers.Authorization = `Bearer ${sessao.token}`;
       setUsuario(sessao.usuario);
+
+      // ✅ usuário já logado → pode iniciar sync
+      iniciarSyncListener();
     }
 
     setLoading(false);
@@ -43,9 +49,12 @@ export function AuthProvider({ children }) {
 
       salvarSessaoOffline(data.usuario, data.token);
 
+      // ✅ AGORA SIM → iniciar sync
+      iniciarSyncListener();
+
       return true;
 
-    } catch {
+    } catch (error) {
 
       // 🔴 OFFLINE
       const sessao = obterSessaoOffline();
@@ -53,6 +62,10 @@ export function AuthProvider({ children }) {
       if (sessao && sessao.usuario.usuario === usuarioLogin) {
         setUsuario(sessao.usuario);
         api.defaults.headers.Authorization = `Bearer ${sessao.token}`;
+
+        // ✅ offline também pode sincronizar depois
+        iniciarSyncListener();
+
         return true;
       }
 
@@ -66,9 +79,16 @@ export function AuthProvider({ children }) {
   function logout() {
     limparSessaoOffline();
     setUsuario(null);
+
     delete api.defaults.headers.Authorization;
+
+    // opcional: recarregar app limpo
+    window.location.href = '/login';
   }
 
+  /* =====================================================
+     PROVIDER
+  ===================================================== */
   return (
     <AuthContext.Provider
       value={{
