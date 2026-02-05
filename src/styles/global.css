@@ -1,0 +1,293 @@
+/* =========================================================
+   ARGUZ ONE - GLOBAL STYLES
+   Produto profissional Arguz Tech
+   ========================================================= */
+
+/* RESET BÁSICO */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: radial-gradient(circle at top, #0b1224, #020617 70%);
+  color: #e5e7eb;
+  -webkit-font-smoothing: antialiased;
+  
+}
+
+html, body {
+  overscroll-behavior: none;
+}
+
+
+#root {
+  min-height: 100vh;
+}
+
+/* =========================================================
+   VARIÁVEIS GLOBAIS
+   ========================================================= */
+:root {
+  /* Backgrounds */
+  --bg-main: #020617;
+  --bg-surface: rgba(15, 23, 42, 0.85);
+  --bg-surface-solid: #0f172a;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+
+  /* Bordas */
+  --border-soft: rgba(255, 255, 255, 0.08);
+
+  /* Texto */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5f5;
+  --text-muted: #94a3b8;
+
+  /* Cores de status */
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #facc15;
+
+  /* Marca */
+  --brand: #e11d48;
+
+  /* Radius */
+  --radius: 10px;
+}
+
+/* =========================================================
+   LAYOUT GERAL
+   ========================================================= */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* =========================================================
+   PÁGINAS PADRÃO
+   ========================================================= */
+.page {
+  width: 100%;
+  max-width: 1400px;
+}
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.page-header p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.page-content {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   DASHBOARD HOME
+   ========================================================= */
+.dashboard-hero {
+  height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.dashboard-hero h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.dashboard-hero span {
+  color: var(--brand);
+}
+
+.dashboard-hero p {
+  margin-top: 10px;
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   TABELAS
+   ========================================================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.page-content table {
+  margin-top: 8px;
+}
+
+thead {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+thead th {
+  text-align: left;
+  padding: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+tbody tr {
+  transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Valores financeiros */
+.valor-entrada {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.valor-saida {
+  color: var(--danger);
+  font-weight: 500;
+}
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+.btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* =========================================================
+   BADGES / STATUS
+   ========================================================= */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.badge-ativo {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--success);
+}
+
+.badge-inativo {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 14px;
+  }
+
+  .page-content {
+    padding: 14px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+/* ==============================
+   MOBILE SIDEBAR (APP MODE)
+============================== */
+
+.sidebar {
+  transition: transform 0.25s ease;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 999;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 998;
+  }
+
+  .sidebar-close-btn {
+    display: block !important;
+  }
+}
