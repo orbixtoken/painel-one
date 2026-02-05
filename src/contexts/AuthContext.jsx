@@ -25,21 +25,22 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(usuarioLogin, senha) {
-    try {
-      const { data } = await api.post('/auth/login', {
-        usuario: usuarioLogin,
-        senha
-      });
+  try {
+    const { data } = await api.post('/auth/login', {
+      usuario: usuarioLogin,
+      senha
+    });
 
-      api.defaults.headers.Authorization = `Bearer ${data.token}`;
-      setUsuario(data.usuario);
-      salvarSessaoOffline(data.usuario, data.token);
+    api.defaults.headers.Authorization = `Bearer ${data.token}`;
+    setUsuario(data.usuario);
+    salvarSessaoOffline(data.usuario, data.token);
 
-      return true;
-    } catch {
-      throw new Error('Login inválido');
-    }
+    return true;
+  } catch (err) {
+    throw err;
   }
+}
+
 
   function logout() {
     limparSessaoOffline();

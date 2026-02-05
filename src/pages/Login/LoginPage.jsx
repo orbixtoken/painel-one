@@ -40,7 +40,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Usuário ou Email"
+            placeholder="Usuário"
             value={usuario}
             onChange={e => setUsuario(e.target.value)}
             required
