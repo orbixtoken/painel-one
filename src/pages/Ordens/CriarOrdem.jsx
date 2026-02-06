@@ -5,7 +5,7 @@ import { listarProdutos } from '../../api/produtos';
 import { useNavigate } from 'react-router-dom';
 
 // 🔥 NOVO (offline)
-import { adicionarOrdemPendente } from '../../lib/offline/ordensQueue';
+//import { adicionarOrdemPendente } from '../../lib/offline/ordensQueue';
 
 export default function CriarOrdem() {
   const navigate = useNavigate();
