@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { salvarClientesOffline, listarClientesOffline } from '../../lib/offline/clientesCache';
+//import { salvarClientesOffline, listarClientesOffline } from '../../lib/offline/clientesCache';
 import {
   listarClientes,
   atualizarCliente
@@ -17,18 +17,16 @@ export default function ClientesPage() {
     carregar();
   }, []);
 
- async function carregar() {
+async function carregar() {
   try {
-    const data = await listarClientes(); // API
-
+    const data = await listarClientes();
     setClientes(data);
-
-    await salvarClientesOffline(data);
-  } catch {
-    const offline = await listarClientesOffline();
-    setClientes(offline);
+  } catch (err) {
+    console.error('Erro ao carregar clientes:', err);
+    alert('Erro ao carregar clientes do servidor');
   }
 }
+
 
   async function inativar(cliente) {
     if (!window.confirm('Inativar este cliente?')) return;
