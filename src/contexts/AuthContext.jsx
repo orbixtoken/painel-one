@@ -32,11 +32,13 @@ export function AuthProvider({ children }) {
     setUsuario(data.usuario);
   }
 
-  function logout() {
-    localStorage.clear();
-    delete api.defaults.headers.Authorization;
-    setUsuario(null);
-  }
+ function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
+  setUsuario(null);
+  delete api.defaults.headers.Authorization;
+}
+
 
   return (
     <AuthContext.Provider
