@@ -7,18 +7,42 @@ export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /* =====================================================
+     BOOT DA SESSÃO
+  ===================================================== */
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const usuarioSalvo = localStorage.getItem('usuario');
+    try {
+      // limpa possíveis resíduos do modo offline antigo
+      localStorage.removeItem('clientes_offline');
+      localStorage.removeItem('produtos_offline');
+      localStorage.removeItem('ordens_pendentes');
+      localStorage.removeItem('orcamentos_pendentes');
 
-    if (token && usuarioSalvo) {
+      const token = localStorage.getItem('token');
+      const usuarioSalvo = localStorage.getItem('usuario');
+
+      if (!token || !usuarioSalvo) {
+        setLoading(false);
+        return;
+      }
+
+      const usuarioParse = JSON.parse(usuarioSalvo);
+
       api.defaults.headers.Authorization = `Bearer ${token}`;
-      setUsuario(JSON.parse(usuarioSalvo));
+      setUsuario(usuarioParse);
+    } catch (err) {
+      // se der erro em qualquer dado salvo, limpa tudo
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      setUsuario(null);
     }
 
     setLoading(false);
   }, []);
 
+  /* =====================================================
+     LOGIN
+  ===================================================== */
   async function login(email, senha) {
     const { data } = await api.post('/auth/login', {
       email,
@@ -32,13 +56,15 @@ export function AuthProvider({ children }) {
     setUsuario(data.usuario);
   }
 
- function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('usuario');
-  setUsuario(null);
-  delete api.defaults.headers.Authorization;
-}
-
+  /* =====================================================
+     LOGOUT
+  ===================================================== */
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    setUsuario(null);
+    delete api.defaults.headers.Authorization;
+  }
 
   return (
     <AuthContext.Provider

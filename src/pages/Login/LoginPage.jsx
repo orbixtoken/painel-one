@@ -20,7 +20,8 @@ export default function LoginPage() {
 
     try {
       await login(email, senha);
-      navigate('/');
+      window.location.href = '/';
+
     } catch {
       setErro('Credenciais inválidas');
     } finally {
