@@ -1,4 +1,4 @@
-const CACHE_NAME = 'arguz-one-v1';
+const CACHE_NAME = 'arguz-one-v2';
 
 const ASSETS = [
   '/',
@@ -28,6 +28,13 @@ self.addEventListener('activate', event => {
 
 // Fetch
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // 🚫 NÃO CACHEAR API
+  if (url.pathname.startsWith('/api')) {
+    return;
+  }
+
   if (event.request.method !== 'GET') return;
 
   event.respondWith(

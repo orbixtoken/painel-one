@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import { salvarClientesOffline, listarClientesOffline } from '../../lib/offline/clientesCache';
+
 import {
   listarClientes,
   atualizarCliente
 } from '../../api/clientes';
-
-
 
 export default function ClientesPage() {
   const [clientes, setClientes] = useState([]);
@@ -17,16 +15,10 @@ export default function ClientesPage() {
     carregar();
   }, []);
 
-async function carregar() {
-  try {
+  async function carregar() {
     const data = await listarClientes();
     setClientes(data);
-  } catch (err) {
-    console.error('Erro ao carregar clientes:', err);
-    alert('Erro ao carregar clientes do servidor');
   }
-}
-
 
   async function inativar(cliente) {
     if (!window.confirm('Inativar este cliente?')) return;
@@ -40,7 +32,7 @@ async function carregar() {
 
     carregar();
   }
-   
+
   /* =========================
      FILTRO
   ========================= */

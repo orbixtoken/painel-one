@@ -4,9 +4,6 @@ import { buscarCliente } from '../../api/clientes';
 import { listarProdutos } from '../../api/produtos';
 import { useNavigate } from 'react-router-dom';
 
-// 🔥 NOVO (offline)
-//import { adicionarOrdemPendente } from '../../lib/offline/ordensQueue';
-
 export default function CriarOrdem() {
   const navigate = useNavigate();
 
@@ -22,20 +19,13 @@ export default function CriarOrdem() {
 
   const [salvando, setSalvando] = useState(false);
 
-  /* =========================
-     LOAD PRODUTOS
-  ========================= */
   useEffect(() => {
     listarProdutos().then(setProdutos);
   }, []);
 
-  /* =========================
-     CLIENTE
-  ========================= */
   async function buscarClienteDigitado(id) {
     setClienteId(id);
     setClienteNome(null);
-
     if (!id) return;
 
     try {
@@ -46,9 +36,6 @@ export default function CriarOrdem() {
     }
   }
 
-  /* =========================
-     ITENS
-  ========================= */
   function adicionarProduto() {
     setItens([...itens, { tipo: 'produto', referencia_id: '', quantidade: 1 }]);
   }
@@ -69,17 +56,12 @@ export default function CriarOrdem() {
     setItens(copia);
   }
 
-  /* =========================
-     CÁLCULOS
-  ========================= */
   const subtotal = itens.reduce((total, item) => {
     if (item.tipo === 'produto') {
       const p = produtos.find(p => p.id == item.referencia_id);
       return p ? total + p.valor_final * item.quantidade : total;
     }
-
     if (item.tipo === 'servico') return total + Number(item.valor || 0);
-
     return total;
   }, 0);
 
@@ -91,53 +73,33 @@ export default function CriarOrdem() {
 
   const totalFinal = Math.max(subtotal - valorDesconto, 0);
 
-  /* =========================
-     SALVAR (ONLINE + OFFLINE)
-  ========================= */
   async function salvar() {
     if (!clienteId || itens.length === 0) {
       alert('Informe cliente e ao menos um item');
       return;
     }
 
-    const payload = {
-      cliente_id: Number(clienteId),
-      itens,
-      desconto_tipo: aplicarDesconto ? descontoTipo : null,
-      desconto_valor: aplicarDesconto ? descontoValor : 0
-    };
-
     try {
       setSalvando(true);
-
-      // 🔵 tenta online primeiro
-      await criarOrdem(payload);
-
+      await criarOrdem({
+        cliente_id: Number(clienteId),
+        itens,
+        desconto_tipo: aplicarDesconto ? descontoTipo : null,
+        desconto_valor: aplicarDesconto ? descontoValor : 0
+      });
       navigate('/ordens');
-
     } catch (err) {
-
-      // 🔥 FALLBACK OFFLINE AUTOMÁTICO
-      await adicionarOrdemPendente(payload);
-
-      alert(
-        '📴 Sem internet.\nA ordem foi salva offline e será sincronizada automaticamente quando a conexão voltar.'
-      );
-
-      navigate('/ordens');
-
+      alert(err.response?.data?.message || 'Erro ao criar ordem');
     } finally {
       setSalvando(false);
     }
   }
 
-  /* =========================
-     UI
-  ========================= */
   return (
     <div className="page">
       <div style={{ maxWidth: 1080, margin: '0 auto' }}>
 
+        {/* TÍTULO */}
         <h1 style={{ fontSize: 24, marginBottom: 20 }}>Nova Ordem</h1>
 
         {/* CLIENTE */}
@@ -173,7 +135,6 @@ export default function CriarOrdem() {
                   alignItems: 'end'
                 }}
               >
-
                 {item.tipo === 'produto' ? (
                   <div>
                     <label style={{ fontSize: 13 }}>Produto (ID)</label>
@@ -204,24 +165,30 @@ export default function CriarOrdem() {
                 )}
 
                 {item.tipo === 'produto' ? (
-                  <input
-                    type="number"
-                    min="1"
-                    style={{ height: 42 }}
-                    value={item.quantidade}
-                    onChange={e =>
-                      atualizarItem(index, 'quantidade', Number(e.target.value))
-                    }
-                  />
+                  <div>
+                    <label style={{ fontSize: 13 }}>Qtd</label>
+                    <input
+                      type="number"
+                      min="1"
+                      style={{ height: 42, fontSize: 15 }}
+                      value={item.quantidade}
+                      onChange={e =>
+                        atualizarItem(index, 'quantidade', Number(e.target.value))
+                      }
+                    />
+                  </div>
                 ) : (
-                  <input
-                    type="number"
-                    style={{ height: 42 }}
-                    value={item.valor}
-                    onChange={e =>
-                      atualizarItem(index, 'valor', Number(e.target.value))
-                    }
-                  />
+                  <div>
+                    <label style={{ fontSize: 13 }}>Valor</label>
+                    <input
+                      type="number"
+                      style={{ height: 42, fontSize: 15 }}
+                      value={item.valor}
+                      onChange={e =>
+                        atualizarItem(index, 'valor', Number(e.target.value))
+                      }
+                    />
+                  </div>
                 )}
 
                 <button
@@ -236,6 +203,7 @@ export default function CriarOrdem() {
           );
         })}
 
+        {/* AÇÕES DE ITEM */}
         <div style={{ marginBottom: 20 }}>
           <button onClick={adicionarProduto}>+ Produto</button>
           <button onClick={adicionarServico} style={{ marginLeft: 10 }}>
@@ -243,10 +211,50 @@ export default function CriarOrdem() {
           </button>
         </div>
 
+        {/* DESCONTO */}
+        <div className="card">
+          <label style={{ fontSize: 13 }}>
+            <input
+              type="checkbox"
+              checked={aplicarDesconto}
+              onChange={e => setAplicarDesconto(e.target.checked)}
+            /> Aplicar desconto
+          </label>
+
+          {aplicarDesconto && (
+            <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+              <select
+                style={{ height: 40, fontSize: 14 }}
+                value={descontoTipo}
+                onChange={e => setDescontoTipo(e.target.value)}
+              >
+                <option value="valor">Valor</option>
+                <option value="percentual">Percentual</option>
+              </select>
+
+              <input
+                type="number"
+                style={{ height: 40, width: 140, fontSize: 14 }}
+                value={descontoValor}
+                onChange={e => setDescontoValor(Number(e.target.value))}
+              />
+            </div>
+          )}
+        </div>
+
         {/* RESUMO */}
         <div className="card">
-          <p><strong>Subtotal:</strong> R$ {subtotal.toFixed(2)}</p>
-          <p style={{ fontSize: 26 }}>
+          <p style={{ fontSize: 14 }}>
+            <strong>Subtotal:</strong> R$ {subtotal.toFixed(2)}
+          </p>
+
+          {aplicarDesconto && (
+            <p style={{ fontSize: 14, color: '#ff6b6b' }}>
+              <strong>Desconto:</strong> - R$ {valorDesconto.toFixed(2)}
+            </p>
+          )}
+
+          <p style={{ fontSize: 26, marginTop: 6 }}>
             <strong>Total:</strong> R$ {totalFinal.toFixed(2)}
           </p>
         </div>
