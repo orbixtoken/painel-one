@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { salvarProdutosOffline, listarProdutosOffline } from '../../lib/offline/produtosCache';
 
 import {
   listarProdutos,
@@ -9,7 +8,7 @@ import {
 
 export default function ProdutosPage() {
   const [produtos, setProdutos] = useState([]);
-  const [filtroStatus, setFiltroStatus] = useState('ativo'); // 🔥 padrão
+  const [filtroStatus, setFiltroStatus] = useState('ativo');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,17 +16,15 @@ export default function ProdutosPage() {
   }, []);
 
   async function carregar() {
-  try {
-    const data = await listarProdutos();
-
-    setProdutos(data);
-
-    await salvarProdutosOffline(data);
-  } catch {
-    const offline = await listarProdutosOffline();
-    setProdutos(offline);
+    try {
+      const data = await listarProdutos();
+      setProdutos(data);
+    } catch (err) {
+      console.error('Erro ao carregar produtos:', err);
+      alert('Erro ao carregar produtos do servidor');
+    }
   }
-}
+
   async function toggleAtivo(produto) {
     const acao = produto.ativo ? 'inativar' : 'ativar';
     if (!window.confirm(`Deseja ${acao} este produto?`)) return;
@@ -72,7 +69,6 @@ export default function ProdutosPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 12 }}>
-            {/* 🔍 FILTRO */}
             <select
               value={filtroStatus}
               onChange={e => setFiltroStatus(e.target.value)}
@@ -137,8 +133,8 @@ export default function ProdutosPage() {
                         fontWeight: 600,
                         color: '#fff',
                         backgroundColor: p.ativo
-                          ? '#16a34a'   // verde
-                          : '#dc2626'   // vermelho
+                          ? '#16a34a'
+                          : '#dc2626'
                       }}
                     >
                       {p.ativo ? 'Ativo' : 'Inativo'}
@@ -177,7 +173,7 @@ export default function ProdutosPage() {
                       color: '#94a3b8'
                     }}
                   >
-                    Nenhum produto encontrado para o filtro selecionado
+                    Nenhum produto encontrado
                   </td>
                 </tr>
               )}
@@ -190,9 +186,6 @@ export default function ProdutosPage() {
   );
 }
 
-/* =========================
-   ESTILOS INLINE PADRÃO
-========================= */
 const th = {
   textAlign: 'left',
   padding: '14px 16px',
