@@ -1,169 +1,232 @@
 import { useEffect, useState } from 'react';
-import {
-  listarMovimentacoes,
-  criarMovimentacao
-} from '../../api/financeiroExtra';
+import api from '../../lib/api';
 
 export default function FinanceiroExtraPage() {
-  const [movs, setMovs] = useState([]);
-  const [form, setForm] = useState({
-    tipo: 'despesa',
-    categoria: '',
-    descricao: '',
-    valor: '',
-    data_movimento: '',
-    data_vencimento: '',
-    observacao: ''
-  });
+  const [movimentacoes, setMovimentacoes] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+
+  const [tipo, setTipo] = useState('despesa');
+  const [categoriaId, setCategoriaId] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [valor, setValor] = useState('');
+  const [dataLancamento, setDataLancamento] = useState('');
+  const [observacao, setObservacao] = useState('');
+
+  const [periodo, setPeriodo] = useState('mes');
 
   useEffect(() => {
-    carregar();
-  }, []);
+    carregarCategorias();
+    carregarMovimentacoes();
+  }, [periodo]);
 
-  async function carregar() {
-    const data = await listarMovimentacoes();
-    setMovs(data);
+  async function carregarCategorias() {
+    const { data } = await api.get('/financeiro-extra/categorias');
+    setCategorias(data);
   }
 
-  function handleChange(e) {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+  async function carregarMovimentacoes() {
+    const { data } = await api.get(
+      `/financeiro-extra?periodo=${periodo}`
+    );
+    setMovimentacoes(data);
   }
 
   async function salvar(e) {
     e.preventDefault();
-    await criarMovimentacao(form);
-    setForm({
-      tipo: 'despesa',
-      categoria: '',
-      descricao: '',
-      valor: '',
-      data_movimento: '',
-      data_vencimento: '',
-      observacao: ''
+
+    await api.post('/financeiro-extra', {
+      tipo,
+      categoria_id: categoriaId,
+      descricao,
+      valor,
+      data_lancamento: dataLancamento,
+      observacao
     });
-    carregar();
+
+    setDescricao('');
+    setValor('');
+    setDataLancamento('');
+    setObservacao('');
+
+    carregarMovimentacoes();
   }
 
-  const totalDespesas = movs
-    .filter(m => m.tipo === 'despesa')
-    .reduce((t, m) => t + Number(m.valor), 0);
+  async function marcarComoPago(id) {
+    await api.put(`/financeiro-extra/${id}`, {
+      status: 'pago'
+    });
 
-  const totalCompromissos = movs
+    carregarMovimentacoes();
+  }
+
+  // =============================
+  // RESUMO
+  // =============================
+  const totalDespesas = movimentacoes
+    .filter(m => m.tipo === 'despesa')
+    .reduce((s, m) => s + Number(m.valor), 0);
+
+  const totalCompromissos = movimentacoes
     .filter(m => m.tipo === 'compromisso')
-    .reduce((t, m) => t + Number(m.valor), 0);
+    .reduce((s, m) => s + Number(m.valor), 0);
+
+  const totalAPagar = movimentacoes
+    .filter(m => m.tipo === 'compromisso' && m.status !== 'pago')
+    .reduce((s, m) => s + Number(m.valor), 0);
 
   return (
     <div className="page">
-      <h1>Despesas e Compromissos</h1>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <h1>Despesas e Compromissos</h1>
 
-      {/* RESUMO */}
-      <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
-        <div className="card" style={{ padding: 20 }}>
-          <strong>Despesas:</strong>
-          <div>R$ {totalDespesas.toFixed(2)}</div>
+        {/* RESUMO */}
+        <div style={{ display: 'flex', gap: 40, marginBottom: 20 }}>
+          <div>
+            <strong>Despesas:</strong><br />
+            R$ {totalDespesas.toFixed(2)}
+          </div>
+          <div>
+            <strong>Compromissos:</strong><br />
+            R$ {totalCompromissos.toFixed(2)}
+          </div>
+          <div>
+            <strong>A pagar:</strong><br />
+            R$ {totalAPagar.toFixed(2)}
+          </div>
         </div>
 
-        <div className="card" style={{ padding: 20 }}>
-          <strong>Compromissos:</strong>
-          <div>R$ {totalCompromissos.toFixed(2)}</div>
+        {/* FILTROS */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+          <button className="btn" onClick={() => setPeriodo('semana')}>
+            Semana
+          </button>
+          <button className="btn" onClick={() => setPeriodo('mes')}>
+            Mês
+          </button>
+          <button className="btn" onClick={() => setPeriodo('tudo')}>
+            Tudo
+          </button>
         </div>
-      </div>
 
-      {/* FORM */}
-      <div className="card" style={{ padding: 20, marginBottom: 20 }}>
-        <form onSubmit={salvar} style={{ display: 'grid', gap: 10 }}>
+        {/* FORMULÁRIO */}
+        <form onSubmit={salvar} className="card" style={{ padding: 16, marginBottom: 20 }}>
           <select
-            name="tipo"
-            value={form.tipo}
-            onChange={handleChange}
+            value={tipo}
+            onChange={e => setTipo(e.target.value)}
+            required
           >
             <option value="despesa">Despesa</option>
             <option value="compromisso">Compromisso</option>
           </select>
 
-          <input
-            name="categoria"
-            placeholder="Categoria"
-            value={form.categoria}
-            onChange={handleChange}
+          <select
+            value={categoriaId}
+            onChange={e => setCategoriaId(e.target.value)}
             required
-          />
+          >
+            <option value="">Categoria</option>
+            {categorias
+              .filter(c => c.tipo === tipo)
+              .map(c => (
+                <option key={c.id} value={c.id}>
+                  {c.nome}
+                </option>
+              ))}
+          </select>
 
           <input
-            name="descricao"
+            type="text"
             placeholder="Descrição"
-            value={form.descricao}
-            onChange={handleChange}
+            value={descricao}
+            onChange={e => setDescricao(e.target.value)}
             required
           />
 
           <input
             type="number"
-            step="0.01"
-            name="valor"
             placeholder="Valor"
-            value={form.valor}
-            onChange={handleChange}
+            value={valor}
+            onChange={e => setValor(e.target.value)}
             required
           />
 
           <input
             type="date"
-            name="data_movimento"
-            value={form.data_movimento}
-            onChange={handleChange}
+            value={dataLancamento}
+            onChange={e => setDataLancamento(e.target.value)}
             required
           />
 
-          {form.tipo === 'compromisso' && (
-            <input
-              type="date"
-              name="data_vencimento"
-              value={form.data_vencimento}
-              onChange={handleChange}
-            />
-          )}
-
           <input
-            name="observacao"
+            type="text"
             placeholder="Observação"
-            value={form.observacao}
-            onChange={handleChange}
+            value={observacao}
+            onChange={e => setObservacao(e.target.value)}
           />
 
-          <button className="btn btn-primary">
+          <button className="btn btn-primary" type="submit">
             Salvar
           </button>
         </form>
-      </div>
 
-      {/* LISTA */}
-      <div className="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Tipo</th>
-              <th>Categoria</th>
-              <th>Descrição</th>
-              <th>Valor</th>
-              <th>Data</th>
-            </tr>
-          </thead>
-          <tbody>
-            {movs.map(m => (
-              <tr key={m.id}>
-                <td>{m.tipo}</td>
-                <td>{m.categoria}</td>
-                <td>{m.descricao}</td>
-                <td>R$ {Number(m.valor).toFixed(2)}</td>
-                <td>{m.data_movimento}</td>
+        {/* TABELA */}
+        <div className="card">
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Categoria</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {movimentacoes.map(m => (
+                <tr key={m.id}>
+                  <td>{m.tipo}</td>
+                  <td>{m.categoria_nome}</td>
+                  <td>{m.descricao}</td>
+                  <td>R$ {Number(m.valor).toFixed(2)}</td>
+                  <td>
+                    {m.data
+                      ? new Date(m.data).toLocaleDateString()
+                      : '-'}
+                  </td>
+                  <td>
+                    {m.status === 'pago' ? (
+                      <span style={{ color: '#22c55e' }}>Pago</span>
+                    ) : (
+                      <span style={{ color: '#f59e0b' }}>Pendente</span>
+                    )}
+                  </td>
+                  <td>
+                    {m.status !== 'pago' && (
+                      <button
+                        className="btn btn-success"
+                        onClick={() => marcarComoPago(m.id)}
+                      >
+                        Marcar pago
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+
+              {movimentacoes.length === 0 && (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: 20 }}>
+                    Nenhuma movimentação encontrada
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
   );
