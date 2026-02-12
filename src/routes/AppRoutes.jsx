@@ -27,6 +27,7 @@ import ClienteDetalhe from '../pages/Clientes/ClienteDetalhe';
 
 // Pages – Financeiro
 import FinanceiroPage from '../pages/Financeiro/FinanceiroPage';
+import FinanceiroExtraPage from '../pages/FinanceiroExtra/FinanceiroExtraPage';
 
 // Pages – Auditoria
 import AuditoriaPage from '../pages/Auditoria/AuditoriaPage';
@@ -91,6 +92,8 @@ export default function AppRoutes() {
 
           {/* Financeiro */}
           <Route path="/financeiro" element={<FinanceiroPage />} />
+          <Route path="/financeiro-extra" element={<FinanceiroExtraPage />} />
+
 
           {/* Auditoria */}
           <Route path="/auditoria" element={<AuditoriaPage />} />
