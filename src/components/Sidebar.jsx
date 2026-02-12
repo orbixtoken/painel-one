@@ -73,7 +73,7 @@ export default function Sidebar({ isOpen = false, onClose }) {
         <NavLink to="/clientes" style={linkStyle} onClick={onClose}>Clientes</NavLink>
         <NavLink to="/produtos" style={linkStyle} onClick={onClose}>Produtos</NavLink>
         <NavLink to="/financeiro" style={linkStyle} onClick={onClose}>Financeiro</NavLink>
-        <NavLink to="/financeiro-extra" style={linkStyle} onClick={onClose}>despesas</NavLink>
+        <NavLink to="/financeiro-extra" style={linkStyle} onClick={onClose}>Despesas</NavLink>
         <NavLink to="/auditoria" style={linkStyle} onClick={onClose}>Auditoria</NavLink>
         <NavLink to="/usuarios" style={linkStyle} onClick={onClose}>Usuários</NavLink>
         <NavLink to="/orcamentos" style={linkStyle} onClick={onClose}>Orçamentos</NavLink>
