@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { listarAuditoria } from '../../api/auditoria';
+import './AuditoriaPage.css';
 
 export default function AuditoriaPage() {
   const [auditoria, setAuditoria] = useState([]);
@@ -13,9 +14,6 @@ export default function AuditoriaPage() {
     setAuditoria(data);
   }
 
-  /* =========================
-     AGRUPAR POR DATA (DIA)
-  ========================= */
   const auditoriaPorDia = auditoria.reduce((acc, item) => {
     const dia = new Date(item.data).toLocaleDateString();
     if (!acc[dia]) acc[dia] = [];
@@ -37,108 +35,91 @@ export default function AuditoriaPage() {
 
   return (
     <div className="page">
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div className="auditoria-container">
 
-        {/* CABEÇALHO */}
-        <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontSize: 26, fontWeight: 600 }}>
-            Auditoria do Sistema
-          </h1>
-          <p style={{ color: '#94a3b8', fontSize: 14 }}>
-            Registro completo de todas as ações realizadas
-          </p>
+        <div className="auditoria-header">
+          <h1>Auditoria do Sistema</h1>
+          <p>Registro completo de todas as ações realizadas</p>
         </div>
 
-        {/* CONTEÚDO */}
         {diasOrdenados.length === 0 && (
-          <div className="card" style={{ padding: 40, textAlign: 'center' }}>
+          <div className="card auditoria-empty">
             Nenhum registro encontrado
           </div>
         )}
 
         {diasOrdenados.map(dia => (
-          <div key={dia} style={{ marginBottom: 32 }}>
+          <div key={dia} className="auditoria-dia">
 
-            {/* DATA */}
-            <div
-              style={{
-                marginBottom: 12,
-                fontSize: 15,
-                fontWeight: 600,
-                color: '#e5e7eb'
-              }}
-            >
+            <div className="auditoria-data">
               {dia}
             </div>
 
-            {/* TABELA DO DIA */}
-            <div className="card" style={{ padding: 0 }}>
-              <table style={{ width: '100%' }}>
-                <thead>
-                  <tr>
-                    <th style={th}>Hora</th>
-                    <th style={th}>Tipo</th>
-                    <th style={th}>Cliente</th>
-                    <th style={th}>Ordem</th>
-                    <th style={th}>Valor</th>
-                    <th style={th}>Descrição</th>
-                    <th style={th}>Responsável</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {auditoriaPorDia[dia].map((a, index) => (
-                    <tr key={index}>
-                      <td style={td}>
-                        {new Date(a.data).toLocaleTimeString()}
-                      </td>
-
-                      <td style={td}>
-                        <span
-                          style={{
-                            padding: '4px 10px',
-                            borderRadius: 12,
-                            fontSize: 12,
-                            fontWeight: 600,
-                            color: '#fff',
-                            backgroundColor: corTipo(a.tipo)
-                          }}
-                        >
-                          {a.tipo.toUpperCase()}
-                        </span>
-                      </td>
-
-                      <td style={td}>{a.cliente_id || '-'}</td>
-                      <td style={td}>{a.ordem_id || '-'}</td>
-
-                      <td style={td}>
-                        {a.valor !== null ? (
-                          <span
-                            style={{
-                              fontWeight: 600,
-                              color:
-                                a.valor >= 0 ? '#16a34a' : '#dc2626'
-                            }}
-                          >
-                            R$ {Number(a.valor).toFixed(2)}
-                          </span>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-
-                      <td style={td}>{a.descricao}</td>
-
-                      <td style={td}>
-                        {a.responsavel_nome
-                          ? `${a.responsavel_nome} (#${a.responsavel_id})`
-                          : '-'}
-                      </td>
+            <div className="card auditoria-card">
+              <div className="table-wrapper">
+                <table className="responsive-table">
+                  <thead>
+                    <tr>
+                      <th>Hora</th>
+                      <th>Tipo</th>
+                      <th>Cliente</th>
+                      <th>Ordem</th>
+                      <th>Valor</th>
+                      <th>Descrição</th>
+                      <th>Responsável</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {auditoriaPorDia[dia].map((a, index) => (
+                      <tr key={index}>
+                        <td>
+                          {new Date(a.data).toLocaleTimeString()}
+                        </td>
+
+                        <td>
+                          <span
+                            className="tipo-badge"
+                            style={{ backgroundColor: corTipo(a.tipo) }}
+                          >
+                            {a.tipo.toUpperCase()}
+                          </span>
+                        </td>
+
+                        <td>{a.cliente_id || '-'}</td>
+                        <td>{a.ordem_id || '-'}</td>
+
+                        <td>
+                          {a.valor !== null ? (
+                            <span
+                              className={
+                                a.valor >= 0
+                                  ? 'valor-positivo'
+                                  : 'valor-negativo'
+                              }
+                            >
+                              R$ {Number(a.valor).toFixed(2)}
+                            </span>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
+
+                        <td className="descricao-col">
+                          {a.descricao}
+                        </td>
+
+                        <td>
+                          {a.responsavel_nome
+                            ? `${a.responsavel_nome} (#${a.responsavel_id})`
+                            : '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+
           </div>
         ))}
 
@@ -146,19 +127,3 @@ export default function AuditoriaPage() {
     </div>
   );
 }
-
-/* =========================
-   ESTILOS PADRÃO
-========================= */
-const th = {
-  textAlign: 'left',
-  padding: '14px 16px',
-  fontSize: 13,
-  fontWeight: 600,
-  opacity: 0.8
-};
-
-const td = {
-  padding: '14px 16px',
-  fontSize: 14
-};

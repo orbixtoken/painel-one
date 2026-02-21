@@ -1,0 +1,56 @@
+.financeiro-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.controls-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.controls-summary {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.total-value {
+  color: var(--success);
+}
+
+.tipo-col {
+  text-transform: uppercase;
+}
+
+.saldo-col {
+  font-weight: 600;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 20px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .financeiro-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls-summary {
+    justify-content: space-between;
+  }
+
+  .responsive-table {
+    min-width: 850px;
+  }
+
+}

@@ -7,6 +7,7 @@ import {
 } from '../../api/produtos';
 
 import BadgeStatus from '../../components/BadgeStatus';
+import './ProdutoDetalhe.css';
 
 export default function ProdutoDetalhe() {
   const { id } = useParams();
@@ -18,13 +19,15 @@ export default function ProdutoDetalhe() {
 
   useEffect(() => {
     carregar();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [id]);
 
   async function carregar() {
     try {
       const produtos = await listarProdutos();
-      const encontrado = produtos.find(p => String(p.id) === String(id));
+      const encontrado = produtos.find(
+        p => String(p.id) === String(id)
+      );
 
       if (!encontrado) {
         alert('Produto não encontrado');
@@ -67,31 +70,21 @@ export default function ProdutoDetalhe() {
 
   return (
     <div className="page">
-      <div style={{ maxWidth: 760, margin: '0 auto' }}>
+      <div className="produto-detalhe-container">
 
-        {/* CABEÇALHO */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 24
-          }}
-        >
-          <h1 style={{ fontSize: 24 }}>
-            Produto #{produto.id}
-          </h1>
-
+        {/* HEADER */}
+        <div className="produto-header">
+          <h1>Produto #{produto.id}</h1>
           <BadgeStatus status={produto.ativo ? 'ativo' : 'inativo'} />
         </div>
 
         {/* DADOS PRINCIPAIS */}
-        <div className="card" style={{ marginBottom: 20 }}>
-          <div style={grid2}>
-            <div>
+        <div className="card">
+          <div className="grid-2">
+
+            <div className="form-group">
               <label>Nome</label>
               <input
-                style={input}
                 value={produto.nome || ''}
                 onChange={e =>
                   setProduto({ ...produto, nome: e.target.value })
@@ -99,22 +92,21 @@ export default function ProdutoDetalhe() {
               />
             </div>
 
-            <div>
+            <div className="form-group">
               <label>Categoria</label>
               <input
-                style={input}
                 value={produto.categoria || ''}
                 onChange={e =>
                   setProduto({ ...produto, categoria: e.target.value })
                 }
               />
             </div>
+
           </div>
 
-          <div style={{ marginTop: 16 }}>
+          <div className="form-group">
             <label>Descrição</label>
             <textarea
-              style={textarea}
               value={produto.descricao || ''}
               onChange={e =>
                 setProduto({ ...produto, descricao: e.target.value })
@@ -124,14 +116,14 @@ export default function ProdutoDetalhe() {
         </div>
 
         {/* ESTOQUE E VALORES */}
-        <div className="card" style={{ marginBottom: 20 }}>
-          <div style={grid3}>
-            <div>
+        <div className="card">
+          <div className="grid-3">
+
+            <div className="form-group">
               <label>Estoque</label>
               <input
                 type="number"
                 min="0"
-                style={input}
                 value={produto.quantidade || 0}
                 onChange={e =>
                   setProduto({
@@ -142,12 +134,11 @@ export default function ProdutoDetalhe() {
               />
             </div>
 
-            <div>
+            <div className="form-group">
               <label>Valor Pago (R$)</label>
               <input
                 type="number"
                 step="0.01"
-                style={input}
                 value={produto.valor_pago || 0}
                 onChange={e =>
                   setProduto({
@@ -158,15 +149,12 @@ export default function ProdutoDetalhe() {
               />
             </div>
 
-            <div>
+            <div className="form-group">
               <label>Valor Final (R$)</label>
               <input
                 type="number"
                 step="0.01"
-                style={{
-                  ...input,
-                  fontWeight: 600
-                }}
+                className="valor-final"
                 value={produto.valor_final || 0}
                 onChange={e =>
                   setProduto({
@@ -176,35 +164,31 @@ export default function ProdutoDetalhe() {
                 }
               />
             </div>
+
           </div>
         </div>
 
         {/* STATUS */}
-        <div className="card" style={{ marginBottom: 20 }}>
-          <label>Status do Produto</label>
-          <select
-            style={input}
-            value={produto.ativo ? 'true' : 'false'}
-            onChange={e =>
-              setProduto({
-                ...produto,
-                ativo: e.target.value === 'true'
-              })
-            }
-          >
-            <option value="true">Ativo</option>
-            <option value="false">Inativo</option>
-          </select>
+        <div className="card">
+          <div className="form-group">
+            <label>Status do Produto</label>
+            <select
+              value={produto.ativo ? 'true' : 'false'}
+              onChange={e =>
+                setProduto({
+                  ...produto,
+                  ativo: e.target.value === 'true'
+                })
+              }
+            >
+              <option value="true">Ativo</option>
+              <option value="false">Inativo</option>
+            </select>
+          </div>
         </div>
 
         {/* AÇÕES */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 10
-          }}
-        >
+        <div className="form-actions">
           <button
             className="btn"
             onClick={() => navigate('/produtos')}
@@ -225,33 +209,3 @@ export default function ProdutoDetalhe() {
     </div>
   );
 }
-
-/* =========================
-   ESTILOS
-========================= */
-
-const grid2 = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: 16
-};
-
-const grid3 = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  gap: 16
-};
-
-const input = {
-  width: '100%',
-  padding: '10px 12px',
-  fontSize: 14
-};
-
-const textarea = {
-  width: '100%',
-  minHeight: 80,
-  padding: '10px 12px',
-  fontSize: 14,
-  resize: 'vertical'
-};

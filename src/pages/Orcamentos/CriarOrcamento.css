@@ -1,0 +1,85 @@
+.criar-orcamento-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-title {
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-surface-solid);
+  color: var(--text-primary);
+}
+
+.form-group textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.item-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.item-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.resumo-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+}
+
+.total-final {
+  font-size: 20px;
+  margin-top: 6px;
+}
+
+.form-actions {
+  margin-top: 28px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .item-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+}

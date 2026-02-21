@@ -6,6 +6,7 @@ import {
   baixarPdfOrcamento
 } from '../../api/orcamentosPdf';
 import BadgeStatus from '../../components/BadgeStatus';
+import './OrcamentoDetalhe.css';
 
 export default function OrcamentoDetalhe() {
   const { id } = useParams();
@@ -57,19 +58,19 @@ export default function OrcamentoDetalhe() {
 
   return (
     <div className="page">
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
-        {/* CABEÇALHO */}
-        <div className="page-header">
+      <div className="orcamento-detalhe-container">
+
+        {/* HEADER */}
+        <div className="orcamento-header">
           <div>
-            <h1 style={{ fontSize: 26 }}>
-              Orçamento #{orcamento.id}
-            </h1>
-            <BadgeStatus status={orcamento.status} />
-            <p style={{ color: '#94a3b8', marginTop: 6 }}>
+            <h1>Orçamento #{orcamento.id}</h1>
+            <p>
               Criado em:{' '}
               {new Date(orcamento.criado_em).toLocaleString()}
             </p>
           </div>
+
+          <BadgeStatus status={orcamento.status} />
         </div>
 
         {/* CLIENTE */}
@@ -79,43 +80,45 @@ export default function OrcamentoDetalhe() {
         </div>
 
         {/* ITENS */}
-        <h3 style={{ marginTop: 24 }}>Itens do Orçamento</h3>
+        <h3 className="section-title">Itens do Orçamento</h3>
 
-        <div className="card" style={{ padding: 0 }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Descrição</th>
-                <th>Qtd</th>
-                <th>Valor Unit.</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orcamento.itens.map(item => (
-                <tr key={item.id}>
-                  <td>
-                    <strong>
-                      {item.tipo === 'produto'
-                        ? item.produto_nome
-                        : item.servico_descricao}
-                    </strong>
-                  </td>
-                  <td>{item.quantidade}</td>
-                  <td>
-                    R$ {Number(item.preco_unitario).toFixed(2)}
-                  </td>
-                  <td>
-                    R$ {Number(item.total_item).toFixed(2)}
-                  </td>
+        <div className="card">
+          <div className="table-wrapper">
+            <table className="responsive-table">
+              <thead>
+                <tr>
+                  <th>Descrição</th>
+                  <th>Qtd</th>
+                  <th>Valor Unit.</th>
+                  <th>Total</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {orcamento.itens.map(item => (
+                  <tr key={item.id}>
+                    <td>
+                      <strong>
+                        {item.tipo === 'produto'
+                          ? item.produto_nome
+                          : item.servico_descricao}
+                      </strong>
+                    </td>
+                    <td>{item.quantidade}</td>
+                    <td>
+                      R$ {Number(item.preco_unitario).toFixed(2)}
+                    </td>
+                    <td>
+                      R$ {Number(item.total_item).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* RESUMO */}
-        <div className="card" style={{ marginTop: 20 }}>
+        <div className="card resumo-card">
           <p>
             Subtotal:{' '}
             <strong>
@@ -132,7 +135,7 @@ export default function OrcamentoDetalhe() {
             </p>
           )}
 
-          <p style={{ fontSize: 18 }}>
+          <p className="total-final">
             Total:{' '}
             <strong>
               R$ {Number(orcamento.valor_total).toFixed(2)}
@@ -149,7 +152,7 @@ export default function OrcamentoDetalhe() {
         )}
 
         {/* AÇÕES */}
-        <div style={{ marginTop: 24, display: 'flex', gap: 10 }}>
+        <div className="orcamento-actions">
           {orcamento.status !== 'cancelado' && (
             <button
               className="btn btn-danger"
@@ -159,18 +162,30 @@ export default function OrcamentoDetalhe() {
             </button>
           )}
 
-          <button onClick={abrirPdf} disabled={gerandoPdf}>
+          <button
+            className="btn"
+            onClick={abrirPdf}
+            disabled={gerandoPdf}
+          >
             Abrir PDF
           </button>
 
-          <button onClick={baixarPdf} disabled={gerandoPdf}>
+          <button
+            className="btn"
+            onClick={baixarPdf}
+            disabled={gerandoPdf}
+          >
             Baixar PDF
           </button>
 
-          <button onClick={enviarWhatsapp}>
+          <button
+            className="btn"
+            onClick={enviarWhatsapp}
+          >
             WhatsApp
           </button>
         </div>
+
       </div>
     </div>
   );

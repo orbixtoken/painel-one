@@ -1,79 +1,132 @@
+/* =========================================================
+   LOGIN - ARGUZ ONE
+========================================================= */
+
 .login-wrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f4f4;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  background: radial-gradient(circle at top, #0b1224, #020617 70%);
+  padding: 20px;
 }
 
 .login-card {
   width: 100%;
-  max-width: 360px;
-  background: #708494;
-  padding: 32px;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  max-width: 420px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 36px 28px;
+  backdrop-filter: blur(10px);
   text-align: center;
 }
 
 .login-logo {
-  width: 90px;
-  margin-bottom: 16px;
+  width: 120px;
+  margin-bottom: 18px;
 }
 
 .login-card h1 {
-  margin: 0;
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .subtitle {
-  margin: 4px 0 24px;
-  font-size: 13px;
-  color: #000000;
+  margin-top: 6px;
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 28px;
 }
 
-.login-card form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* INPUTS */
+
+.input-group {
+  margin-bottom: 16px;
+  position: relative;
 }
 
-.login-card input {
-  padding: 10px 12px;
-  border: 1px solid #110808;
-  border-radius: 4px;
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #0f172a;
+  color: #f1f5f9;
   font-size: 14px;
 }
 
-.login-card input:focus {
+.input-group input:focus {
   outline: none;
-  border-color: #1b38ad;
+  border-color: #e11d48;
 }
 
-.login-card button {
-  margin-top: 8px;
-  padding: 10px;
-  background: #f03a03;
-  color: #000000;
+/* SENHA COM BOTÃO */
+
+.senha-group {
+  position: relative;
+}
+
+.toggle-senha {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
   border: none;
-  border-radius: 4px;
-  font-weight: 500;
   cursor: pointer;
+  font-size: 16px;
+  color: #94a3b8;
 }
 
-.login-card button:disabled {
-  opacity: 0.7;
+/* ERRO */
+
+.erro {
+  color: #ef4444;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+/* BOTÃO */
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #e11d48;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.erro {
-  color: #d32f2f;
-  font-size: 13px;
-}
+/* FOOTER */
 
 .login-footer {
-  margin-top: 24px;
-  font-size: 11px;
-  color: #140b0b;
+  margin-top: 28px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 28px 20px;
+  }
+
+  .login-logo {
+    width: 100px;
+  }
 }

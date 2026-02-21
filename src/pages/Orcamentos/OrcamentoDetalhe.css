@@ -1,0 +1,75 @@
+.orcamento-detalhe-container {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.orcamento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.orcamento-header h1 {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.orcamento-header p {
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.section-title {
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.resumo-card {
+  margin-top: 20px;
+}
+
+.total-final {
+  font-size: 18px;
+  margin-top: 8px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.responsive-table {
+  min-width: 700px;
+}
+
+.orcamento-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .orcamento-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .orcamento-actions {
+    flex-direction: column;
+  }
+
+  .orcamento-actions .btn {
+    width: 100%;
+  }
+
+  .responsive-table {
+    min-width: 750px;
+  }
+
+}

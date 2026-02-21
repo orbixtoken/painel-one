@@ -8,6 +8,7 @@ import {
 
 import api from '../../lib/api';
 import BadgeStatus from '../../components/BadgeStatus';
+import './ClienteDetalhe.css';
 
 export default function ClienteDetalhe() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ export default function ClienteDetalhe() {
 
   useEffect(() => {
     carregarTudo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [id]);
 
   async function carregarTudo() {
@@ -72,17 +73,13 @@ export default function ClienteDetalhe() {
 
   return (
     <div className="page">
-      <div style={{ maxWidth: 980, margin: '0 auto' }}>
+      <div className="cliente-detalhe-container">
 
-        {/* CABEÇALHO */}
-        <div className="page-header" style={{ marginBottom: 32 }}>
+        {/* HEADER */}
+        <div className="cliente-header">
           <div>
-            <h1 style={{ fontSize: 32, fontWeight: 700 }}>
-              Cliente #{cliente.id}
-            </h1>
-            <p style={{ color: '#94a3b8', fontSize: 16 }}>
-              Detalhes completos e histórico do cliente
-            </p>
+            <h1>Cliente #{cliente.id}</h1>
+            <p>Detalhes completos e histórico do cliente</p>
           </div>
 
           <BadgeStatus
@@ -90,17 +87,15 @@ export default function ClienteDetalhe() {
           />
         </div>
 
-        {/* DADOS DO CLIENTE */}
-        <div className="card" style={{ marginBottom: 40 }}>
-          <h3 style={{ marginBottom: 20, fontSize: 22 }}>
-            Dados do Cliente
-          </h3>
+        {/* DADOS */}
+        <div className="card cliente-card">
+          <h3>Dados do Cliente</h3>
 
-          <div className="grid-2" style={{ gap: 20 }}>
-            <div>
-              <label style={{ fontSize: 15 }}>Nome *</label>
+          <div className="form-grid">
+
+            <div className="form-group">
+              <label>Nome *</label>
               <input
-                style={{ fontSize: 16, height: 44 }}
                 value={cliente.nome}
                 onChange={e =>
                   setCliente({ ...cliente, nome: e.target.value })
@@ -108,10 +103,9 @@ export default function ClienteDetalhe() {
               />
             </div>
 
-            <div>
-              <label style={{ fontSize: 15 }}>Telefone</label>
+            <div className="form-group">
+              <label>Telefone</label>
               <input
-                style={{ fontSize: 16, height: 44 }}
                 value={cliente.telefone || ''}
                 onChange={e =>
                   setCliente({ ...cliente, telefone: e.target.value })
@@ -119,10 +113,9 @@ export default function ClienteDetalhe() {
               />
             </div>
 
-            <div>
-              <label style={{ fontSize: 15 }}>Documento</label>
+            <div className="form-group">
+              <label>Documento</label>
               <input
-                style={{ fontSize: 16, height: 44 }}
                 value={cliente.documento || ''}
                 onChange={e =>
                   setCliente({ ...cliente, documento: e.target.value })
@@ -130,10 +123,9 @@ export default function ClienteDetalhe() {
               />
             </div>
 
-            <div>
-              <label style={{ fontSize: 15 }}>Status</label>
+            <div className="form-group">
+              <label>Status</label>
               <select
-                style={{ fontSize: 16, height: 44 }}
                 value={cliente.ativo}
                 onChange={e =>
                   setCliente({
@@ -146,12 +138,12 @@ export default function ClienteDetalhe() {
                 <option value="false">Inativo</option>
               </select>
             </div>
+
           </div>
 
-          <div style={{ marginTop: 28 }}>
+          <div className="form-actions">
             <button
               className="btn btn-primary"
-              style={{ fontSize: 16, padding: '12px 28px' }}
               onClick={salvar}
               disabled={salvando}
             >
@@ -161,60 +153,57 @@ export default function ClienteDetalhe() {
         </div>
 
         {/* HISTÓRICO */}
-        <div className="card">
-          <h3 style={{ marginBottom: 20, fontSize: 22 }}>
-            Histórico Completo
-          </h3>
+        <div className="card historico-card">
+          <h3>Histórico Completo</h3>
 
           {historico.length === 0 && (
-            <p style={{ color: '#94a3b8', fontSize: 15 }}>
+            <p className="historico-vazio">
               Nenhum histórico encontrado para este cliente.
             </p>
           )}
 
           {historico.length > 0 && (
-            <table style={{ fontSize: 15 }}>
-              <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Tipo</th>
-                  <th>Descrição</th>
-                  <th>Valor</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {historico.map((h, index) => (
-                  <tr key={index}>
-                    <td>
-                      {new Date(h.data).toLocaleString()}
-                    </td>
-
-                    <td style={{ fontWeight: 600 }}>
-                      {h.tipo.toUpperCase()}
-                    </td>
-
-                    <td>{h.descricao}</td>
-
-                    <td
-                      style={{
-                        fontWeight: 700,
-                        color:
-                          h.valor === null
-                            ? '#94a3b8'
-                            : h.valor < 0
-                            ? '#dc2626'
-                            : '#16a34a'
-                      }}
-                    >
-                      {h.valor !== null
-                        ? `R$ ${Number(h.valor).toFixed(2)}`
-                        : '-'}
-                    </td>
+            <div className="table-wrapper">
+              <table className="responsive-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Descrição</th>
+                    <th>Valor</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {historico.map((h, index) => (
+                    <tr key={index}>
+                      <td>
+                        {new Date(h.data).toLocaleString()}
+                      </td>
+
+                      <td className="tipo-col">
+                        {h.tipo.toUpperCase()}
+                      </td>
+
+                      <td>{h.descricao}</td>
+
+                      <td
+                        className={
+                          h.valor === null
+                            ? 'valor-neutro'
+                            : h.valor < 0
+                            ? 'valor-negativo'
+                            : 'valor-positivo'
+                        }
+                      >
+                        {h.valor !== null
+                          ? `R$ ${Number(h.valor).toFixed(2)}`
+                          : '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 

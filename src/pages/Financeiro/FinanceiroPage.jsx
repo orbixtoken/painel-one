@@ -1,11 +1,12 @@
 import { useEffect, useState, useMemo } from 'react';
 import { listarMovimentos } from '../../api/financeiro';
 import BadgeStatus from '../../components/BadgeStatus';
+import './FinanceiroPage.css';
 
 export default function FinanceiroPage() {
   const [ordensFinanceiras, setOrdensFinanceiras] = useState([]);
   const [filtroStatus, setFiltroStatus] = useState('aberta');
-  const [filtroPeriodo, setFiltroPeriodo] = useState('semana'); // semana | mes | tudo
+  const [filtroPeriodo, setFiltroPeriodo] = useState('semana');
 
   useEffect(() => {
     carregar();
@@ -22,13 +23,12 @@ export default function FinanceiroPage() {
           ordem_id: m.ordem_id,
           ordem_status: m.ordem_status,
           tipo_composicao: m.tipo_composicao,
-          data: m.criado_em, // ✅ CAMPO CORRETO
+          data: m.criado_em,
           entrada: 0,
           estorno: 0,
         };
       }
 
-      // garante a data mais antiga da ordem
       if (new Date(m.criado_em) < new Date(agrupado[m.ordem_id].data)) {
         agrupado[m.ordem_id].data = m.criado_em;
       }
@@ -45,7 +45,6 @@ export default function FinanceiroPage() {
     setOrdensFinanceiras(Object.values(agrupado));
   }
 
-  // 🔹 filtro por período (AGORA FUNCIONA)
   function filtrarPorPeriodo(ordem) {
     if (filtroPeriodo === 'tudo') return true;
 
@@ -97,19 +96,9 @@ export default function FinanceiroPage() {
         <p>Resumo financeiro por ordem</p>
       </div>
 
-      {/* CONTROLES */}
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '12px',
-          marginBottom: '16px',
-        }}
-      >
-        {/* Status */}
-        <div style={{ display: 'flex', gap: '8px' }}>
+      <div className="financeiro-controls">
+
+        <div className="controls-group">
           <button
             className={`btn ${filtroStatus === 'aberta' ? 'btn-primary' : ''}`}
             onClick={() => setFiltroStatus('aberta')}
@@ -124,13 +113,15 @@ export default function FinanceiroPage() {
             Canceladas
           </button>
 
-          <button className="btn" onClick={() => setFiltroStatus('todas')}>
+          <button
+            className="btn"
+            onClick={() => setFiltroStatus('todas')}
+          >
             Todas
           </button>
         </div>
 
-        {/* Período */}
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="controls-group">
           <button
             className={`btn ${filtroPeriodo === 'semana' ? 'btn-primary' : ''}`}
             onClick={() => setFiltroPeriodo('semana')}
@@ -145,14 +136,16 @@ export default function FinanceiroPage() {
             Mês
           </button>
 
-          <button className="btn" onClick={() => setFiltroPeriodo('tudo')}>
+          <button
+            className="btn"
+            onClick={() => setFiltroPeriodo('tudo')}
+          >
             Tudo
           </button>
         </div>
 
-        {/* Total + impressão */}
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <strong style={{ color: 'var(--success)' }}>
+        <div className="controls-summary">
+          <strong className="total-value">
             Total: R$ {totalAbertas.toFixed(2)}
           </strong>
 
@@ -160,55 +153,64 @@ export default function FinanceiroPage() {
             Imprimir
           </button>
         </div>
+
       </div>
 
       <div className="page-content">
-        <table>
-          <thead>
-            <tr>
-              <th>Ordem</th>
-              <th>Data</th>
-              <th>Tipo</th>
-              <th>Entrada</th>
-              <th>Estorno</th>
-              <th>Saldo</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+        <div className="table-wrapper">
+          <table className="responsive-table">
+            <thead>
+              <tr>
+                <th>Ordem</th>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Entrada</th>
+                <th>Estorno</th>
+                <th>Saldo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {ordensFiltradas.map((o) => {
-              const saldo =
-                o.ordem_status === 'cancelada'
-                  ? 0
-                  : o.entrada - o.estorno;
+            <tbody>
+              {ordensFiltradas.map((o) => {
+                const saldo =
+                  o.ordem_status === 'cancelada'
+                    ? 0
+                    : o.entrada - o.estorno;
 
-              return (
-                <tr key={o.ordem_id}>
-                  <td>#{o.ordem_id}</td>
-                  <td>{new Date(o.data).toLocaleString()}</td>
-                  <td style={{ textTransform: 'uppercase' }}>
-                    {o.tipo_composicao}
-                  </td>
-                  <td className="valor-entrada">R$ {o.entrada.toFixed(2)}</td>
-                  <td className="valor-saida">R$ {o.estorno.toFixed(2)}</td>
-                  <td style={{ fontWeight: 600 }}>R$ {saldo.toFixed(2)}</td>
-                  <td>
-                    <BadgeStatus status={o.ordem_status} />
+                return (
+                  <tr key={o.ordem_id}>
+                    <td>#{o.ordem_id}</td>
+                    <td>{new Date(o.data).toLocaleString()}</td>
+                    <td className="tipo-col">
+                      {o.tipo_composicao}
+                    </td>
+                    <td className="valor-entrada">
+                      R$ {o.entrada.toFixed(2)}
+                    </td>
+                    <td className="valor-saida">
+                      R$ {o.estorno.toFixed(2)}
+                    </td>
+                    <td className="saldo-col">
+                      R$ {saldo.toFixed(2)}
+                    </td>
+                    <td>
+                      <BadgeStatus status={o.ordem_status} />
+                    </td>
+                  </tr>
+                );
+              })}
+
+              {ordensFiltradas.length === 0 && (
+                <tr>
+                  <td colSpan="7" className="empty-cell">
+                    Nenhum registro encontrado
                   </td>
                 </tr>
-              );
-            })}
-
-            {ordensFiltradas.length === 0 && (
-              <tr>
-                <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
-                  Nenhum registro encontrado
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

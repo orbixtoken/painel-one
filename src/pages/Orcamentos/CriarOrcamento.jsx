@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { criarOrcamento } from '../../api/orcamentos';
 import { listarProdutos } from '../../api/produtos';
+import './CriarOrcamento.css';
 
 export default function CriarOrcamento() {
   const navigate = useNavigate();
@@ -65,8 +66,10 @@ export default function CriarOrcamento() {
 
   const total = useMemo(() => {
     let v = subtotal;
-    if (descontoTipo === 'percentual') v -= subtotal * (descontoValor / 100);
-    if (descontoTipo === 'valor') v -= descontoValor;
+    if (descontoTipo === 'percentual')
+      v -= subtotal * (descontoValor / 100);
+    if (descontoTipo === 'valor')
+      v -= descontoValor;
     return v < 0 ? 0 : v;
   }, [subtotal, descontoTipo, descontoValor]);
 
@@ -96,38 +99,34 @@ export default function CriarOrcamento() {
 
   return (
     <div className="page">
-      <div style={{ maxWidth: 880, margin: '0 auto' }}>
+      <div className="criar-orcamento-container">
 
-        {/* TÍTULO */}
-        <h1 style={{ fontSize: 28, marginBottom: 24 }}>
-          Novo Orçamento
-        </h1>
+        <h1>Novo Orçamento</h1>
 
         {/* CLIENTE */}
         <div className="card">
-          <label style={label}>ID do Cliente (opcional)</label>
-          <input
-            style={input}
-            value={clienteId}
-            onChange={e => setClienteId(e.target.value)}
-            placeholder="Pode deixar em branco"
-          />
+          <div className="form-group">
+            <label>ID do Cliente (opcional)</label>
+            <input
+              value={clienteId}
+              onChange={e => setClienteId(e.target.value)}
+              placeholder="Pode deixar em branco"
+            />
+          </div>
         </div>
 
         {/* ITENS */}
-        <h3 style={{ marginTop: 32, marginBottom: 12 }}>
-          Itens do Orçamento
-        </h3>
+        <h3 className="section-title">Itens do Orçamento</h3>
 
         {itens.map((item, i) => (
-          <div key={i} className="card">
-            <strong style={{ fontSize: 15 }}>
+          <div key={i} className="card item-card">
+
+            <strong>
               {item.tipo === 'produto' ? 'Produto' : 'Serviço'}
             </strong>
 
             {item.tipo === 'produto' ? (
               <select
-                style={input}
                 value={item.produto_id}
                 onChange={e => selecionarProduto(i, e.target.value)}
               >
@@ -140,7 +139,6 @@ export default function CriarOrcamento() {
               </select>
             ) : (
               <input
-                style={input}
                 placeholder="Descrição do serviço"
                 value={item.servico_descricao}
                 onChange={e =>
@@ -149,16 +147,8 @@ export default function CriarOrcamento() {
               />
             )}
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '120px 200px',
-                gap: 12,
-                marginTop: 10
-              }}
-            >
+            <div className="item-grid">
               <input
-                style={input}
                 type="number"
                 min="1"
                 placeholder="Qtd"
@@ -169,7 +159,6 @@ export default function CriarOrcamento() {
               />
 
               <input
-                style={input}
                 type="number"
                 placeholder="Preço unitário"
                 value={item.preco_unitario}
@@ -181,7 +170,6 @@ export default function CriarOrcamento() {
 
             <button
               className="btn btn-danger"
-              style={{ marginTop: 12 }}
               onClick={() => removerItem(i)}
             >
               Remover
@@ -189,106 +177,79 @@ export default function CriarOrcamento() {
           </div>
         ))}
 
-        <div style={{ marginTop: 12 }}>
+        <div className="item-actions">
           <button onClick={adicionarProduto}>+ Produto</button>
-          <button onClick={adicionarServico} style={{ marginLeft: 10 }}>
-            + Serviço
-          </button>
+          <button onClick={adicionarServico}>+ Serviço</button>
         </div>
 
         {/* DESCONTO */}
-        <div className="card" style={{ marginTop: 32 }}>
-          <label style={label}>Desconto</label>
-          <select
-            style={input}
-            value={descontoTipo}
-            onChange={e => setDescontoTipo(e.target.value)}
-          >
-            <option value="">Sem desconto</option>
-            <option value="percentual">Percentual (%)</option>
-            <option value="valor">Valor fixo</option>
-          </select>
+        <div className="card">
+          <div className="form-group">
+            <label>Desconto</label>
+            <select
+              value={descontoTipo}
+              onChange={e => setDescontoTipo(e.target.value)}
+            >
+              <option value="">Sem desconto</option>
+              <option value="percentual">Percentual (%)</option>
+              <option value="valor">Valor fixo</option>
+            </select>
 
-          {descontoTipo && (
-            <input
-              style={{ ...input, marginTop: 8 }}
-              type="number"
-              placeholder="Valor do desconto"
-              value={descontoValor}
-              onChange={e => setDescontoValor(e.target.value)}
-            />
-          )}
+            {descontoTipo && (
+              <input
+                type="number"
+                placeholder="Valor do desconto"
+                value={descontoValor}
+                onChange={e => setDescontoValor(e.target.value)}
+              />
+            )}
+          </div>
         </div>
 
         {/* RESUMO */}
-        <div
-          className="card"
-          style={{
-            marginTop: 20,
-            background: '#0f172a',
-            border: '1px solid #1e293b'
-          }}
-        >
-          <p style={{ fontSize: 15 }}>
+        <div className="card resumo-card">
+          <p>
             Subtotal: <strong>R$ {subtotal.toFixed(2)}</strong>
           </p>
-          <p style={{ fontSize: 22, marginTop: 6 }}>
+          <p className="total-final">
             Total: <strong>R$ {total.toFixed(2)}</strong>
           </p>
         </div>
 
-        {/* VALIDADE / OBS */}
+        {/* VALIDADE */}
         <div className="card">
-          <label style={label}>Validade</label>
-          <input
-            style={input}
-            type="date"
-            value={validade}
-            onChange={e => setValidade(e.target.value)}
-          />
+          <div className="form-group">
+            <label>Validade</label>
+            <input
+              type="date"
+              value={validade}
+              onChange={e => setValidade(e.target.value)}
+            />
 
-          <label style={{ ...label, marginTop: 14 }}>
-            Observações
-          </label>
-          <textarea
-            style={{ ...input, height: 90 }}
-            value={observacoes}
-            onChange={e => setObservacoes(e.target.value)}
-          />
+            <label>Observações</label>
+            <textarea
+              value={observacoes}
+              onChange={e => setObservacoes(e.target.value)}
+            />
+          </div>
         </div>
 
         {/* AÇÕES */}
-        <div style={{ marginTop: 28 }}>
+        <div className="form-actions">
           <button onClick={() => navigate('/orcamentos')}>
             Cancelar
           </button>
 
           <button
             className="btn btn-primary"
-            style={{ marginLeft: 10, padding: '10px 22px' }}
             onClick={salvar}
             disabled={salvando}
           >
             {salvando ? 'Salvando...' : 'Salvar Orçamento'}
           </button>
         </div>
+
       </div>
     </div>
   );
 }
-
-/* =========================
-   ESTILOS BASE
-========================= */
-const label = {
-  fontSize: 14,
-  fontWeight: 500,
-  marginBottom: 6
-};
-
-const input = {
-  width: '100%',
-  padding: '10px 12px',
-  fontSize: 14,
-  borderRadius: 6
-};

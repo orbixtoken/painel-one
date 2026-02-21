@@ -3,6 +3,7 @@ import {
   buscarEmpresaConfig,
   atualizarEmpresaConfig
 } from '../../api/empresa';
+import './EmpresaConfigPage.css';
 
 export default function EmpresaConfigPage() {
   const [form, setForm] = useState({
@@ -45,7 +46,7 @@ export default function EmpresaConfigPage() {
   }
 
   async function salvar() {
-    if (!form.nome) {
+    if (!form.nome.trim()) {
       alert('Nome da empresa é obrigatório');
       return;
     }
@@ -67,53 +68,41 @@ export default function EmpresaConfigPage() {
 
   return (
     <div className="page">
-      <div style={{ maxWidth: 880, margin: '0 auto' }}>
+      <div className="empresa-container">
 
-        {/* TÍTULO */}
-        <h1 style={{ fontSize: 28, marginBottom: 8 }}>
-          Configurações da Empresa
-        </h1>
+        <div className="empresa-header">
+          <h1>Configurações da Empresa</h1>
+          <p>
+            Informações utilizadas em orçamentos, PDFs e documentos oficiais.
+          </p>
+        </div>
 
-        <p style={{ color: '#94a3b8', marginBottom: 24 }}>
-          Informações utilizadas em orçamentos, PDFs e documentos oficiais.
-        </p>
-
-        {/* DADOS PRINCIPAIS */}
+        {/* DADOS */}
         <div className="card">
-          <h3 style={{ marginBottom: 16 }}>
-            Dados da Empresa
-          </h3>
+          <h3>Dados da Empresa</h3>
 
-          <label style={label}>Nome da empresa *</label>
-          <input
-            style={input}
-            name="nome"
-            value={form.nome}
-            onChange={handleChange}
-          />
+          <div className="form-group">
+            <label>Nome da empresa *</label>
+            <input
+              name="nome"
+              value={form.nome}
+              onChange={handleChange}
+            />
+          </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 16,
-              marginTop: 14
-            }}
-          >
-            <div>
-              <label style={label}>Telefone</label>
+          <div className="form-grid">
+            <div className="form-group">
+              <label>Telefone</label>
               <input
-                style={input}
                 name="telefone"
                 value={form.telefone}
                 onChange={handleChange}
               />
             </div>
 
-            <div>
-              <label style={label}>WhatsApp</label>
+            <div className="form-group">
+              <label>WhatsApp</label>
               <input
-                style={input}
                 name="whatsapp"
                 value={form.whatsapp}
                 onChange={handleChange}
@@ -121,60 +110,53 @@ export default function EmpresaConfigPage() {
             </div>
           </div>
 
-          <label style={{ ...label, marginTop: 14 }}>
-            Endereço
-          </label>
-          <input
-            style={input}
-            name="endereco"
-            value={form.endereco}
-            onChange={handleChange}
-          />
+          <div className="form-group">
+            <label>Endereço</label>
+            <input
+              name="endereco"
+              value={form.endereco}
+              onChange={handleChange}
+            />
+          </div>
         </div>
 
-        {/* ORÇAMENTO */}
-        <div className="card" style={{ marginTop: 24 }}>
-          <h3 style={{ marginBottom: 12 }}>
-            Orçamentos e Documentos
-          </h3>
+        {/* ORÇAMENTOS */}
+        <div className="card">
+          <h3>Orçamentos e Documentos</h3>
 
-          <label style={label}>
-            Mensagem padrão do orçamento
-          </label>
+          <div className="form-group">
+            <label>Mensagem padrão do orçamento</label>
+            <textarea
+              name="mensagem_orcamento"
+              value={form.mensagem_orcamento}
+              onChange={handleChange}
+              placeholder="Texto exibido automaticamente no PDF do orçamento"
+            />
+          </div>
 
-          <textarea
-            style={{ ...input, height: 110 }}
-            name="mensagem_orcamento"
-            value={form.mensagem_orcamento}
-            onChange={handleChange}
-            placeholder="Texto exibido automaticamente no PDF do orçamento"
-          />
-
-          <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 6 }}>
+          <p className="form-help">
             Essa mensagem aparece no rodapé dos orçamentos em PDF.
           </p>
         </div>
 
         {/* OBSERVAÇÕES */}
-        <div className="card" style={{ marginTop: 24 }}>
-          <h3 style={{ marginBottom: 12 }}>
-            Observações Internas
-          </h3>
+        <div className="card">
+          <h3>Observações Internas</h3>
 
-          <textarea
-            style={{ ...input, height: 90 }}
-            name="observacoes"
-            value={form.observacoes}
-            onChange={handleChange}
-            placeholder="Uso interno. Não aparece para o cliente."
-          />
+          <div className="form-group">
+            <textarea
+              name="observacoes"
+              value={form.observacoes}
+              onChange={handleChange}
+              placeholder="Uso interno. Não aparece para o cliente."
+            />
+          </div>
         </div>
 
         {/* AÇÕES */}
-        <div style={{ marginTop: 28 }}>
+        <div className="empresa-actions">
           <button
             className="btn btn-primary"
-            style={{ padding: '10px 26px' }}
             onClick={salvar}
             disabled={salvando}
           >
@@ -186,20 +168,3 @@ export default function EmpresaConfigPage() {
     </div>
   );
 }
-
-/* =========================
-   ESTILOS BASE
-========================= */
-const label = {
-  fontSize: 14,
-  fontWeight: 500,
-  marginBottom: 6,
-  display: 'block'
-};
-
-const input = {
-  width: '100%',
-  padding: '10px 12px',
-  fontSize: 14,
-  borderRadius: 6
-};

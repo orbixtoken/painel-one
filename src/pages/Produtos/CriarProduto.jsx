@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { criarProduto } from '../../api/produtos';
+import './CriarProduto.css';
 
 export default function CriarProduto() {
   const navigate = useNavigate();
@@ -44,41 +45,41 @@ export default function CriarProduto() {
 
   return (
     <div className="page">
-      <div style={{ maxWidth: 720, margin: '0 auto' }}>
+      <div className="criar-produto-container">
 
-        {/* CABEÇALHO */}
-        <h1 style={{ fontSize: 24, marginBottom: 24 }}>
-          Novo Produto
-        </h1>
+        {/* HEADER */}
+        <div className="criar-produto-header">
+          <h1>Novo Produto</h1>
+          <p>Preencha os dados para cadastrar um novo produto</p>
+        </div>
 
         {/* DADOS PRINCIPAIS */}
-        <div className="card" style={{ marginBottom: 20 }}>
-          <div style={grid2}>
-            <div>
-              <label>Nome do Produto</label>
+        <div className="card">
+          <div className="grid-2">
+
+            <div className="form-group">
+              <label>Nome do Produto *</label>
               <input
-                style={input}
                 value={nome}
                 onChange={e => setNome(e.target.value)}
                 placeholder="Nome do Produto"
               />
             </div>
 
-            <div>
+            <div className="form-group">
               <label>Categoria</label>
               <input
-                style={input}
                 value={categoria}
                 onChange={e => setCategoria(e.target.value)}
                 placeholder="Categoria"
               />
             </div>
+
           </div>
 
-          <div style={{ marginTop: 16 }}>
+          <div className="form-group">
             <label>Descrição</label>
             <textarea
-              style={textarea}
               value={descricao}
               onChange={e => setDescricao(e.target.value)}
               placeholder="Descrição opcional do produto"
@@ -87,56 +88,47 @@ export default function CriarProduto() {
         </div>
 
         {/* ESTOQUE E VALORES */}
-        <div className="card" style={{ marginBottom: 20 }}>
-          <div style={grid3}>
-            <div>
+        <div className="card">
+          <div className="grid-3">
+
+            <div className="form-group">
               <label>Quantidade em Estoque</label>
               <input
                 type="number"
                 min="0"
-                style={input}
                 value={quantidade}
                 onChange={e => setQuantidade(e.target.value)}
               />
             </div>
 
-            <div>
+            <div className="form-group">
               <label>Valor Pago (R$)</label>
               <input
                 type="number"
                 min="0"
                 step="0.01"
-                style={input}
                 value={valorPago}
                 onChange={e => setValorPago(e.target.value)}
               />
             </div>
 
-            <div>
-              <label>Valor Final (R$)</label>
+            <div className="form-group">
+              <label>Valor Final (R$) *</label>
               <input
                 type="number"
                 min="0"
                 step="0.01"
-                style={{
-                  ...input,
-                  fontWeight: 600
-                }}
+                className="valor-final"
                 value={valorFinal}
                 onChange={e => setValorFinal(e.target.value)}
               />
             </div>
+
           </div>
         </div>
 
         {/* AÇÕES */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 10
-          }}
-        >
+        <div className="form-actions">
           <button
             className="btn"
             onClick={() => navigate('/produtos')}
@@ -157,33 +149,3 @@ export default function CriarProduto() {
     </div>
   );
 }
-
-/* =========================
-   ESTILOS
-========================= */
-
-const grid2 = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: 16
-};
-
-const grid3 = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  gap: 16
-};
-
-const input = {
-  width: '100%',
-  padding: '10px 12px',
-  fontSize: 14
-};
-
-const textarea = {
-  width: '100%',
-  minHeight: 80,
-  padding: '10px 12px',
-  fontSize: 14,
-  resize: 'vertical'
-};
