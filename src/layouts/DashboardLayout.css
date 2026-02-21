@@ -1,31 +1,97 @@
-/* RESET BASE */
+/* ============================= */
+/* RESET GLOBAL CONTROLADO       */
+/* ============================= */
+
 html, body, #root {
   height: 100%;
   margin: 0;
-  overflow: hidden;
+  padding: 0;
   font-family: 'Inter', system-ui, sans-serif;
+  background-color: #020617;
 }
 
-/* LAYOUT PRINCIPAL */
-.layout-root {
+/* Permite scroll vertical normal */
+body {
+  overflow-x: hidden;
+}
+
+/* ============================= */
+/* LAYOUT PRINCIPAL              */
+/* ============================= */
+
+.dashboard-layout {
   display: flex;
   height: 100vh;
+  width: 100%;
   background: #020617;
+  position: relative;
 }
 
-/* ÁREA DIREITA */
-.layout-main {
+/* ============================= */
+/* ÁREA PRINCIPAL (DIREITA)      */
+/* ============================= */
+
+.dashboard-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #020617;
+  min-width: 0; /* MUITO IMPORTANTE PARA NÃO ESTOURAR MOBILE */
+  height: 100vh;
 }
 
-/* CONTEÚDO */
-.layout-content {
+/* ============================= */
+/* CONTEÚDO INTERNO              */
+/* ============================= */
+
+.dashboard-content {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ============================= */
+/* OVERLAY MOBILE                */
+/* ============================= */
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 40;
+}
+
+/* ============================= */
+/* RESPONSIVIDADE                */
+/* ============================= */
+
+@media (max-width: 1024px) {
+  .dashboard-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-main {
+    width: 100%;
+  }
+
+  .dashboard-content {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .dashboard-content {
+    padding: 12px;
+  }
+
 }

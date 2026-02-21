@@ -1,0 +1,75 @@
+.ordem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.ordem-data {
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.cliente-id {
+  opacity: 0.6;
+}
+
+.resumo-card p {
+  font-size: 14px;
+}
+
+.resumo-card .total {
+  font-size: 20px;
+  margin-top: 8px;
+}
+
+.desconto {
+  color: #f87171;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.responsive-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+}
+
+.responsive-table th,
+.responsive-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border-soft);
+  text-align: left;
+}
+
+.valor-entrada {
+  color: var(--success);
+}
+
+.valor-saida {
+  color: #f87171;
+}
+
+.saldo {
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.ordem-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .ordem-header {
+    flex-direction: column;
+  }
+}

@@ -9,6 +9,7 @@ import {
 } from '../../api/ordensPdf';
 
 import BadgeStatus from '../../components/BadgeStatus';
+import './OrdemDetalhe.css';
 
 export default function OrdemDetalhe() {
   const { id } = useParams();
@@ -52,8 +53,7 @@ export default function OrdemDetalhe() {
     if (!ordem) return;
 
     const mensagem = encodeURIComponent(
-      `Olá! Segue a ordem #${ordem.id}.\n` +
-      `Total: R$ ${Number(ordem.valor_total).toFixed(2)}`
+      `Olá! Segue a ordem #${ordem.id}.\nTotal: R$ ${Number(ordem.valor_total).toFixed(2)}`
     );
 
     window.open(`https://wa.me/?text=${mensagem}`, '_blank');
@@ -92,35 +92,33 @@ export default function OrdemDetalhe() {
 
   return (
     <div className="page">
-      {/* CABEÇALHO */}
-      <div className="page-header">
-        <h1>Ordem #{ordem.id}</h1>
+      <div className="ordem-header">
+        <div>
+          <h1>Ordem #{ordem.id}</h1>
+          {ordem.data_abertura && (
+            <p className="ordem-data">
+              Aberta em {new Date(ordem.data_abertura).toLocaleString()}
+            </p>
+          )}
+        </div>
         <BadgeStatus status={ordem.status} />
-        {ordem.data_abertura && (
-          <p>
-            Aberta em:{' '}
-            {new Date(ordem.data_abertura).toLocaleString()}
-          </p>
-        )}
       </div>
 
       <div className="page-content">
+
         {/* RESUMO */}
-        <div className="card" style={{ marginBottom: 24 }}>
+        <div className="card resumo-card">
           <p>
             <strong>Cliente:</strong> {ordem.cliente_nome}{' '}
-            <span style={{ opacity: 0.6 }}>
-              (#{ordem.cliente_id})
-            </span>
+            <span className="cliente-id">#{ordem.cliente_id}</span>
           </p>
 
           <p>
-            <strong>Subtotal:</strong>{' '}
-            R$ {Number(ordem.subtotal || 0).toFixed(2)}
+            <strong>Subtotal:</strong> R$ {Number(ordem.subtotal || 0).toFixed(2)}
           </p>
 
           {ordem.desconto_valor > 0 && (
-            <p style={{ color: '#f87171' }}>
+            <p className="desconto">
               <strong>Desconto:</strong>{' '}
               {ordem.desconto_tipo === 'percentual'
                 ? `${ordem.desconto_valor}%`
@@ -128,9 +126,8 @@ export default function OrdemDetalhe() {
             </p>
           )}
 
-          <p style={{ fontSize: 20, marginTop: 8 }}>
-            <strong>Total:</strong>{' '}
-            R$ {Number(ordem.valor_total).toFixed(2)}
+          <p className="total">
+            <strong>Total:</strong> R$ {Number(ordem.valor_total).toFixed(2)}
           </p>
         </div>
 
@@ -138,30 +135,28 @@ export default function OrdemDetalhe() {
         <h3>Itens da Ordem</h3>
 
         {ordem.itens.length > 0 ? (
-          <table>
-            <thead>
-              <tr>
-                <th>Descrição</th>
-                <th>Qtd</th>
-                <th>Valor Unit.</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ordem.itens.map(item => (
-                <tr key={item.id}>
-                  <td>{item.descricao}</td>
-                  <td>{item.quantidade}</td>
-                  <td>
-                    R$ {Number(item.preco_unitario).toFixed(2)}
-                  </td>
-                  <td>
-                    R$ {Number(item.total_item).toFixed(2)}
-                  </td>
+          <div className="table-wrapper">
+            <table className="responsive-table">
+              <thead>
+                <tr>
+                  <th>Descrição</th>
+                  <th>Qtd</th>
+                  <th>Valor Unit.</th>
+                  <th>Total</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {ordem.itens.map(item => (
+                  <tr key={item.id}>
+                    <td>{item.descricao}</td>
+                    <td>{item.quantidade}</td>
+                    <td>R$ {Number(item.preco_unitario).toFixed(2)}</td>
+                    <td>R$ {Number(item.total_item).toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <p>Sem itens</p>
         )}
@@ -170,49 +165,42 @@ export default function OrdemDetalhe() {
         <h3 style={{ marginTop: 24 }}>Financeiro</h3>
 
         {financeiro.length > 0 ? (
-          <table>
-            <thead>
-              <tr>
-                <th>Tipo</th>
-                <th>Descrição</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {financeiro.map(mov => (
-                <tr key={mov.id}>
-                  <td>{mov.tipo.toUpperCase()}</td>
-                  <td>{mov.descricao}</td>
-                  <td
-                    className={
+          <div className="table-wrapper">
+            <table className="responsive-table">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Descrição</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {financeiro.map(mov => (
+                  <tr key={mov.id}>
+                    <td>{mov.tipo.toUpperCase()}</td>
+                    <td>{mov.descricao}</td>
+                    <td className={
                       mov.tipo === 'entrada'
                         ? 'valor-entrada'
                         : 'valor-saida'
-                    }
-                  >
-                    R$ {Number(mov.valor).toFixed(2)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    }>
+                      R$ {Number(mov.valor).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <p>Sem movimentações financeiras</p>
         )}
 
-        <p style={{ marginTop: 12 }}>
+        <p className="saldo">
           <strong>Saldo:</strong> R$ {saldo.toFixed(2)}
         </p>
 
         {/* AÇÕES */}
-        <div
-          style={{
-            marginTop: 24,
-            display: 'flex',
-            gap: 10,
-            flexWrap: 'wrap'
-          }}
-        >
+        <div className="ordem-actions">
           <button className="btn" onClick={() => navigate('/ordens')}>
             Voltar
           </button>

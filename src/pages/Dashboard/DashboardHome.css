@@ -1,36 +1,86 @@
-.dashboard-home {
+/* ============================= */
+/* HERO DASHBOARD                */
+/* ============================= */
+
+.dashboard-hero {
   width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at top, #000000, #020617);
+  min-height: calc(100vh - 56px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #e5e7eb;
   text-align: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
 }
 
+/* LOGO */
 .dashboard-logo {
   width: 140px;
-  margin-bottom: 24px;
-  opacity: 0.9;
+  max-width: 60%;
+  margin-bottom: 20px;
 }
 
-.dashboard-home h1 {
-  font-size: 36px;
+/* TITLE */
+.dashboard-title {
+  font-size: 2.2rem;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.dashboard-home p {
-  margin-top: 8px;
-  font-size: 15px;
-  color: #94a3b8;
+.dashboard-title span {
+  color: var(--brand);
 }
 
-.dashboard-home footer {
-  position: absolute;
-  bottom: 16px;
-  font-size: 12px;
-  color: #64748b;
+/* SUBTITLE */
+.dashboard-subtitle {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* FOOTER */
+.dashboard-footer {
+  margin-top: 40px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ============================= */
+/* RESPONSIVIDADE                */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .dashboard-hero {
+    padding: 30px 16px;
+  }
+
+  .dashboard-title {
+    font-size: 1.8rem;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .dashboard-logo {
+    width: 110px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .dashboard-title {
+    font-size: 1.6rem;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .dashboard-footer {
+    font-size: 0.7rem;
+  }
 }

@@ -1,0 +1,89 @@
+.form-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.form-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 18px;
+  margin: 24px 0 12px;
+}
+
+.input-full {
+  width: 100%;
+  height: 42px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.cliente-info {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.item-remove {
+  height: 42px;
+}
+
+.item-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desconto-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.resumo p {
+  font-size: 14px;
+}
+
+.resumo .total {
+  font-size: 24px;
+  margin-top: 6px;
+}
+
+.desconto {
+  color: #ff6b6b;
+}
+
+.form-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .item-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .item-remove {
+    width: 100%;
+  }
+}

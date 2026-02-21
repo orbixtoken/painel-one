@@ -2,11 +2,12 @@ import { useEffect, useState, useMemo } from 'react';
 import { listarOrdens } from '../../api/ordens';
 import { useNavigate } from 'react-router-dom';
 import BadgeStatus from '../../components/BadgeStatus';
+import './OrdensList.css';
 
 export default function OrdensList() {
   const [ordens, setOrdens] = useState([]);
   const [filtroStatus, setFiltroStatus] = useState('aberta');
-  const [filtroPeriodo, setFiltroPeriodo] = useState('semana'); // semana | mes | tudo
+  const [filtroPeriodo, setFiltroPeriodo] = useState('semana');
 
   const navigate = useNavigate();
 
@@ -19,15 +20,12 @@ export default function OrdensList() {
     setOrdens(data);
   }
 
-  // 🔹 Filtro por período usando data_abertura (CORRETO)
   function filtrarPorPeriodo(ordem) {
     if (filtroPeriodo === 'tudo') return true;
-
     if (!ordem.data_abertura) return false;
 
     const dataOrdem = new Date(ordem.data_abertura);
     const hoje = new Date();
-
     if (isNaN(dataOrdem)) return false;
 
     if (filtroPeriodo === 'semana') {
@@ -46,7 +44,6 @@ export default function OrdensList() {
     return true;
   }
 
-  // 🔹 Filtros combinados
   const ordensFiltradas = useMemo(() => {
     return ordens.filter((o) => {
       const statusOk =
@@ -56,7 +53,6 @@ export default function OrdensList() {
     });
   }, [ordens, filtroStatus, filtroPeriodo]);
 
-  // 🔹 Totalizador (ordens abertas)
   const totalAbertas = useMemo(() => {
     return ordensFiltradas.reduce((total, o) => {
       if (o.status !== 'cancelada') {
@@ -74,18 +70,9 @@ export default function OrdensList() {
       </div>
 
       {/* CONTROLES */}
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '12px',
-          marginBottom: '16px',
-        }}
-      >
-        {/* Status */}
-        <div style={{ display: 'flex', gap: '8px' }}>
+      <div className="ordens-controls">
+
+        <div className="controls-group">
           <button
             className={`btn ${filtroStatus === 'aberta' ? 'btn-primary' : ''}`}
             onClick={() => setFiltroStatus('aberta')}
@@ -102,13 +89,15 @@ export default function OrdensList() {
             Canceladas
           </button>
 
-          <button className="btn" onClick={() => setFiltroStatus('todas')}>
+          <button
+            className="btn"
+            onClick={() => setFiltroStatus('todas')}
+          >
             Todas
           </button>
         </div>
 
-        {/* Período */}
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="controls-group">
           <button
             className={`btn ${
               filtroPeriodo === 'semana' ? 'btn-primary' : ''
@@ -127,14 +116,16 @@ export default function OrdensList() {
             Mês
           </button>
 
-          <button className="btn" onClick={() => setFiltroPeriodo('tudo')}>
+          <button
+            className="btn"
+            onClick={() => setFiltroPeriodo('tudo')}
+          >
             Tudo
           </button>
         </div>
 
-        {/* Total + ação */}
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <strong style={{ color: 'var(--success)' }}>
+        <div className="controls-summary">
+          <strong className="total-value">
             Total: R$ {totalAbertas.toFixed(2)}
           </strong>
 
@@ -145,55 +136,58 @@ export default function OrdensList() {
             Nova Ordem
           </button>
         </div>
+
       </div>
 
       <div className="page-content">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Data</th>
-              <th>Cliente</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {ordensFiltradas.map((o) => (
-              <tr key={o.id}>
-                <td>{o.id}</td>
-                <td>
-                  {o.data_abertura
-                    ? new Date(o.data_abertura).toLocaleDateString()
-                    : '-'}
-                </td>
-                <td>{o.cliente_id}</td>
-                <td>R$ {Number(o.valor_total).toFixed(2)}</td>
-                <td>
-                  <BadgeStatus status={o.status} />
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => navigate(`/ordens/${o.id}`)}
-                  >
-                    Ver
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {ordensFiltradas.length === 0 && (
+        <div className="table-wrapper">
+          <table className="responsive-table">
+            <thead>
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
-                  Nenhuma ordem encontrada
-                </td>
+                <th>#</th>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {ordensFiltradas.map((o) => (
+                <tr key={o.id}>
+                  <td>{o.id}</td>
+                  <td>
+                    {o.data_abertura
+                      ? new Date(o.data_abertura).toLocaleDateString()
+                      : '-'}
+                  </td>
+                  <td>{o.cliente_id}</td>
+                  <td>R$ {Number(o.valor_total).toFixed(2)}</td>
+                  <td>
+                    <BadgeStatus status={o.status} />
+                  </td>
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => navigate(`/ordens/${o.id}`)}
+                    >
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+              ))}
+
+              {ordensFiltradas.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="empty-cell">
+                    Nenhuma ordem encontrada
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

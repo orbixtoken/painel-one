@@ -1,47 +1,83 @@
+/* ============================= */
+/* SIDEBAR BASE                  */
+/* ============================= */
+
 .sidebar {
   width: 240px;
-  height: 100vh;
-  background: linear-gradient(180deg, #000000, #000000);
-  color: #c00c0c;
+  background: var(--bg-surface-solid);
+  border-right: 1px solid var(--border-soft);
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #020617;
+  height: 100vh;
+  transition: transform 0.3s ease;
+  z-index: 50;
 }
 
+/* HEADER */
 .sidebar-header {
-  padding: 20px;
-  font-size: 20px;
-  font-weight: 600;
-  text-align: center;
-  border-bottom: 1px solid #020617;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-soft);
+  justify-content: space-between;
 }
 
+.brand {
+  color: var(--brand);
+}
+
+/* NAV */
 .sidebar-nav {
   flex: 1;
-  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  padding: 14px;
+  overflow-y: auto;
 }
 
-.sidebar-nav a {
-  padding: 12px 14px;
-  border-radius: 8px;
-  color: #ec190a;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.sidebar-nav a:hover,
-.sidebar-nav a.active {
-  background: #020617;
-  color: #ffffff;
-}
-
+/* FOOTER */
 .sidebar-footer {
-  padding: 12px;
-  font-size: 12px;
+  padding: 12px 16px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-soft);
   text-align: center;
-  color: #94a3b8;
-  border-top: 1px solid #020617;
+}
+
+/* BOTÃO FECHAR */
+.sidebar-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: none;
+}
+
+/* ============================= */
+/* MOBILE                        */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-close-btn {
+    display: block;
+  }
 }

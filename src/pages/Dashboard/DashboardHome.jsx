@@ -1,4 +1,5 @@
 import logo from '/arguz_logo.png';
+import './DashboardHome.css';
 
 export default function DashboardHome() {
   return (
@@ -6,22 +7,18 @@ export default function DashboardHome() {
       <img
         src={logo}
         alt="Arguz Tech"
-        style={{ width: '140px', marginBottom: '20px' }}
+        className="dashboard-logo"
       />
 
-      <h1>
+      <h1 className="dashboard-title">
         Arguz <span>One</span>
       </h1>
 
-      <p>Sistema de Gestão Inteligente</p>
+      <p className="dashboard-subtitle">
+        Sistema de Gestão Inteligente
+      </p>
 
-      <footer
-        style={{
-          marginTop: '40px',
-          fontSize: '0.75rem',
-          color: 'var(--text-muted)',
-        }}
-      >
+      <footer className="dashboard-footer">
         Arguz One © 2025 — Arguz Tech · contato@arguztech.com.br
       </footer>
     </div>

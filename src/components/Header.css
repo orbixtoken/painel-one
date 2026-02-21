@@ -1,57 +1,80 @@
-.topbar {
-  height: 60px;
-  background: #000000;
-  border-bottom: 1px solid #000000;
+/* ============================= */
+/* HEADER BASE                   */
+/* ============================= */
+
+.app-header {
+  height: 56px;
+  background: var(--bg-surface-solid);
+  border-bottom: 1px solid var(--border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  position: fixed;
-  top: 0;
-  left: 240px;
-  right: 0;
-  z-index: 900;
+  flex-shrink: 0;
 }
 
-.menu-btn {
-  display: none;
-  font-size: 22px;
-  background: none;
+/* MENU BUTTON */
+.menu-button {
+  background: transparent;
   border: none;
+  color: var(--text-primary);
+  font-size: 1.4rem;
   cursor: pointer;
 }
 
-.topbar-right {
+/* RIGHT SIDE */
+.header-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  min-width: 0;
 }
 
-.user-name {
-  font-weight: 500;
-  color: #ffffff;
+/* USERNAME */
+.header-username {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
 }
 
-.logout-btn {
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+/* LOGOUT */
+.header-logout {
+  padding: 6px 10px;
+  font-size: 0.75rem;
 }
 
-.logout-btn:hover {
-  opacity: 0.9;
-}
+/* ============================= */
+/* MOBILE ADJUSTMENTS            */
+/* ============================= */
 
-/* Mobile */
 @media (max-width: 768px) {
-  .topbar {
-    left: 0;
+
+  .app-header {
+    padding: 0 12px;
   }
 
-  .menu-btn {
-    display: block;
+  .header-right {
+    gap: 8px;
   }
+
+  .header-username {
+    max-width: 120px;
+    font-size: 0.75rem;
+  }
+
+  .header-logout {
+    padding: 5px 8px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .header-username {
+    display: none;
+  }
+
 }

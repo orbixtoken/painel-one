@@ -3,34 +3,37 @@
    Produto profissional Arguz Tech
    ========================================================= */
 
-/* RESET BÁSICO */
+/* =========================================================
+   RESET GLOBAL
+   ========================================================= */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: radial-gradient(circle at top, #0b1224, #020617 70%);
   color: #e5e7eb;
   -webkit-font-smoothing: antialiased;
-  
-}
-
-html, body {
+  overflow-x: hidden;
   overscroll-behavior: none;
 }
 
-
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* =========================================================
    VARIÁVEIS GLOBAIS
    ========================================================= */
+
 :root {
   /* Backgrounds */
   --bg-main: #020617;
@@ -46,7 +49,7 @@ html, body {
   --text-secondary: #cbd5f5;
   --text-muted: #94a3b8;
 
-  /* Cores de status */
+  /* Cores */
   --success: #22c55e;
   --danger: #ef4444;
   --warning: #facc15;
@@ -59,12 +62,14 @@ html, body {
 }
 
 /* =========================================================
-   LAYOUT GERAL
+   LAYOUT BASE
    ========================================================= */
+
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
   width: 100%;
+  position: relative;
 }
 
 .dashboard-main {
@@ -72,20 +77,24 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 0; /* impede estouro horizontal */
 }
 
 .dashboard-content {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* =========================================================
    PÁGINAS PADRÃO
    ========================================================= */
+
 .page {
   width: 100%;
   max-width: 1400px;
+  margin: 0 auto;
 }
 
 .page-header {
@@ -113,15 +122,29 @@ html, body {
 }
 
 /* =========================================================
+   CARDS
+   ========================================================= */
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* =========================================================
    DASHBOARD HOME
    ========================================================= */
+
 .dashboard-hero {
-  height: calc(100vh - 120px);
+  min-height: calc(100vh - 120px);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   text-align: center;
+  padding: 40px 20px;
 }
 
 .dashboard-hero h1 {
@@ -141,14 +164,11 @@ html, body {
 /* =========================================================
    TABELAS
    ========================================================= */
+
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9rem;
-}
-
-.page-content table {
-  margin-top: 8px;
 }
 
 thead {
@@ -192,6 +212,7 @@ tbody td {
 /* =========================================================
    BOTÕES
    ========================================================= */
+
 .btn {
   padding: 8px 14px;
   border-radius: 6px;
@@ -220,6 +241,7 @@ tbody td {
 /* =========================================================
    BADGES / STATUS
    ========================================================= */
+
 .badge {
   display: inline-block;
   padding: 4px 10px;
@@ -240,32 +262,13 @@ tbody td {
 }
 
 /* =========================================================
-   RESPONSIVO
+   SIDEBAR MOBILE
    ========================================================= */
-@media (max-width: 768px) {
-  .dashboard-content {
-    padding: 14px;
-  }
-
-  .page-content {
-    padding: 14px;
-  }
-
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-/* ==============================
-   MOBILE SIDEBAR (APP MODE)
-============================== */
 
 .sidebar {
   transition: transform 0.25s ease;
 }
 
-/* MOBILE */
 @media (max-width: 900px) {
   .sidebar {
     position: fixed;
@@ -290,4 +293,42 @@ tbody td {
   .sidebar-close-btn {
     display: block !important;
   }
+}
+
+/* =========================================================
+   RESPONSIVO GERAL
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .dashboard-content {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .dashboard-content {
+    padding: 14px;
+  }
+
+  .page-content {
+    padding: 14px;
+  }
+
+  .dashboard-hero h1 {
+    font-size: 1.7rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .dashboard-content {
+    padding: 12px;
+  }
+
+  .page-header h1 {
+    font-size: 1.3rem;
+  }
+
 }
