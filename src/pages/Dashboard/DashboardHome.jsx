@@ -11,11 +11,11 @@ export default function DashboardHome() {
       />
 
       <h1 className="dashboard-title">
-        Arguz <span>One</span>
+         <span></span>
       </h1>
 
       <p className="dashboard-subtitle">
-        Sistema de Gestão Inteligente
+        
       </p>
 
       <footer className="dashboard-footer">

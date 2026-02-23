@@ -19,7 +19,7 @@ export default function Sidebar({ isOpen = false, onClose }) {
       {/* HEADER */}
       <div className="sidebar-header">
         <span>
-          Arguz<span className="brand">One</span>
+          MUZEL<span className="brand"></span>
         </span>
 
         <button

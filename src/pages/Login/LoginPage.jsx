@@ -38,7 +38,7 @@ export default function LoginPage() {
           className="login-logo"
         />
 
-        <h1>Arguz One</h1>
+        <h1></h1>
         <p className="subtitle">
           Sistema de gestão inteligente
         </p>
