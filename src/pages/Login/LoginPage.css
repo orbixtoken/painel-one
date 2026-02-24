@@ -12,7 +12,7 @@
 }
 
 .login-card {
-  width: 100%;
+  width: 90%;
   max-width: 420px;
   background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -23,8 +23,8 @@
 }
 
 .login-logo {
-  width: 260px;
-  margin-bottom: 18px;
+  width: 400px;
+  margin-bottom: 20px;
 }
 
 .login-card h1 {
