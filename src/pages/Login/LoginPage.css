@@ -12,7 +12,7 @@
 }
 
 .login-card {
-  width: 90%;
+  width: 100%;
   max-width: 420px;
   background: rgba(15, 23, 42, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -22,10 +22,18 @@
   text-align: center;
 }
 
+/* =========================
+   LOGO RESPONSIVA PREMIUM
+========================= */
+
 .login-logo {
-  width: 400px;
-  margin-bottom: 20px;
+  width: clamp(180px, 60vw, 360px);
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 22px;
 }
+
+/* ========================= */
 
 .login-card h1 {
   font-size: 24px;
@@ -61,7 +69,7 @@
   border-color: #e11d48;
 }
 
-/* SENHA COM BOTÃO */
+/* SENHA */
 
 .senha-group {
   position: relative;
@@ -119,14 +127,18 @@
   color: #64748b;
 }
 
-/* MOBILE */
+/* =========================
+   MOBILE REFINEMENT
+========================= */
 
 @media (max-width: 480px) {
+
   .login-card {
-    padding: 28px 20px;
+    padding: 26px 18px;
   }
 
-  .login-logo {
-    width: 100px;
+  .login-card h1 {
+    font-size: 22px;
   }
+
 }

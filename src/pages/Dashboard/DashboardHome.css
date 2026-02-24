@@ -14,16 +14,23 @@
   box-sizing: border-box;
 }
 
-/* LOGO */
+/* =============================
+   LOGO RESPONSIVA PREMIUM
+============================= */
+
 .dashboard-logo {
-  width: 800px;
-  max-width: 60%;
-  margin-bottom: 20px;
+  width: clamp(220px, 55vw, 720px);
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 26px;
 }
 
+/* ============================= */
 /* TITLE */
+/* ============================= */
+
 .dashboard-title {
-  font-size: 2.2rem;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
   margin: 0;
   font-weight: 700;
   color: var(--text-primary);
@@ -33,14 +40,20 @@
   color: var(--brand);
 }
 
+/* ============================= */
 /* SUBTITLE */
+/* ============================= */
+
 .dashboard-subtitle {
   margin-top: 10px;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
   color: var(--text-secondary);
 }
 
+/* ============================= */
 /* FOOTER */
+/* ============================= */
+
 .dashboard-footer {
   margin-top: 40px;
   font-size: 0.75rem;
@@ -48,7 +61,7 @@
 }
 
 /* ============================= */
-/* RESPONSIVIDADE                */
+/* RESPONSIVIDADE (refino leve) */
 /* ============================= */
 
 @media (max-width: 768px) {
@@ -57,30 +70,12 @@
     padding: 30px 16px;
   }
 
-  .dashboard-title {
-    font-size: 1.8rem;
-  }
-
-  .dashboard-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .dashboard-logo {
-    width: 110px;
-  }
 }
 
 @media (max-width: 480px) {
 
-  .dashboard-title {
-    font-size: 1.6rem;
-  }
-
-  .dashboard-subtitle {
-    font-size: 0.85rem;
-  }
-
   .dashboard-footer {
     font-size: 0.7rem;
   }
+
 }
