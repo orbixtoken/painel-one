@@ -183,11 +183,14 @@ export default function FinanceiroExtraPage() {
                     <td>{m.data ? new Date(m.data).toLocaleDateString() : '-'}</td>
                     <td>{m.status === 'pago' ? 'Pago' : 'Pendente'}</td>
                     <td className="acoes-cell">
-                      {abaAtiva === 'compromisso' && m.status !== 'pago' && (
-                        <button className="btn" onClick={() => marcarPago(m.id)}>
-                          Marcar pago
-                        </button>
-                      )}
+                     {m.status !== 'pago' && (
+  <button
+    className="btn"
+    onClick={() => marcarPago(m.id)}
+  >
+    Marcar pago
+  </button>
+)}
                       <button className="btn btn-danger" onClick={() => remover(m.id)}>
                         Remover
                       </button>

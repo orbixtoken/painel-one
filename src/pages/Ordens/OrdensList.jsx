@@ -26,6 +26,7 @@ export default function OrdensList() {
 
     const dataOrdem = new Date(ordem.data_abertura);
     const hoje = new Date();
+
     if (isNaN(dataOrdem)) return false;
 
     if (filtroPeriodo === 'semana') {
@@ -48,7 +49,9 @@ export default function OrdensList() {
     return ordens.filter((o) => {
       const statusOk =
         filtroStatus === 'todas' || o.status === filtroStatus;
+
       const periodoOk = filtrarPorPeriodo(o);
+
       return statusOk && periodoOk;
     });
   }, [ordens, filtroStatus, filtroPeriodo]);
@@ -157,16 +160,30 @@ export default function OrdensList() {
               {ordensFiltradas.map((o) => (
                 <tr key={o.id}>
                   <td>{o.id}</td>
+
                   <td>
                     {o.data_abertura
                       ? new Date(o.data_abertura).toLocaleDateString()
                       : '-'}
                   </td>
-                  <td>{o.cliente_id}</td>
-                  <td>R$ {Number(o.valor_total).toFixed(2)}</td>
+
+                  {/* ✅ CORREÇÃO AQUI */}
+                  <td>
+                    {o.cliente_nome
+                      ? o.cliente_nome
+                      : o.cliente_id
+                      ? `Cliente #${o.cliente_id}`
+                      : '-'}
+                  </td>
+
+                  <td>
+                    R$ {Number(o.valor_total).toFixed(2)}
+                  </td>
+
                   <td>
                     <BadgeStatus status={o.status} />
                   </td>
+
                   <td>
                     <button
                       className="btn"
