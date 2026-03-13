@@ -33,11 +33,12 @@ export default function Sidebar({ isOpen = false, onClose }) {
       {/* LINKS */}
       <nav className="sidebar-nav">
         <NavLink to="/" end style={linkStyle} onClick={onClose}>Dashboard</NavLink>
-        <NavLink to="/ordens" style={linkStyle} onClick={onClose}>Ordens</NavLink>
+        <NavLink to="/ordens" style={linkStyle} onClick={onClose}>Entradas</NavLink>
         <NavLink to="/clientes" style={linkStyle} onClick={onClose}>Clientes</NavLink>
         <NavLink to="/produtos" style={linkStyle} onClick={onClose}>Produtos</NavLink>
         <NavLink to="/financeiro" style={linkStyle} onClick={onClose}>Financeiro</NavLink>
         <NavLink to="/financeiro-extra" style={linkStyle} onClick={onClose}>Despesas</NavLink>
+       <NavLink to="/lancamentos-futuros" style={linkStyle} onClick={onClose}>Lançamentos Futuros</NavLink>
         <NavLink to="/auditoria" style={linkStyle} onClick={onClose}>Auditoria</NavLink>
         <NavLink to="/usuarios" style={linkStyle} onClick={onClose}>Usuários</NavLink>
         <NavLink to="/orcamentos" style={linkStyle} onClick={onClose}>Orçamentos</NavLink>

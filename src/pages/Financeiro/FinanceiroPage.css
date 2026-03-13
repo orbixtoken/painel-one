@@ -20,8 +20,41 @@
   flex-wrap: wrap;
 }
 
-.total-value {
-  color: var(--success);
+/* =========================
+   RESUMO FINANCEIRO
+========================= */
+
+.finance-summary {
+  display: flex;
+  gap: 24px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.finance-summary .entrada {
+  color: #22c55e; /* verde */
+}
+
+.finance-summary .despesa {
+  color: #ef4444; /* vermelho */
+}
+
+.finance-summary .saldo {
+  color: #f1f5f9; /* branco suave */
+}
+
+/* =========================
+   VALORES NA TABELA
+========================= */
+
+.valor-entrada {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.valor-saida {
+  color: #ef4444;
+  font-weight: 600;
 }
 
 .tipo-col {
@@ -32,12 +65,23 @@
   font-weight: 600;
 }
 
+.total-value {
+  color: var(--success);
+}
+
+/* =========================
+   TABELA
+========================= */
+
 .empty-cell {
   text-align: center;
   padding: 20px;
 }
 
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 768px) {
 
   .financeiro-controls {
@@ -47,6 +91,12 @@
 
   .controls-summary {
     justify-content: space-between;
+  }
+
+  .finance-summary {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 18px;
   }
 
   .responsive-table {

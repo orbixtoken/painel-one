@@ -1,81 +1,100 @@
-import { useEffect, useState, useMemo } from 'react';
-import { listarOrdens } from '../../api/ordens';
-import { useNavigate } from 'react-router-dom';
-import BadgeStatus from '../../components/BadgeStatus';
-import './OrdensList.css';
+import { useEffect, useState, useMemo } from 'react'
+import { listarOrdens } from '../../api/ordens'
+import { useNavigate } from 'react-router-dom'
+import BadgeStatus from '../../components/BadgeStatus'
+import './OrdensList.css'
 
 export default function OrdensList() {
-  const [ordens, setOrdens] = useState([]);
-  const [filtroStatus, setFiltroStatus] = useState('aberta');
-  const [filtroPeriodo, setFiltroPeriodo] = useState('semana');
 
-  const navigate = useNavigate();
+  const [ordens, setOrdens] = useState([])
+  const [filtroStatus, setFiltroStatus] = useState('aberta')
+  const [filtroPeriodo, setFiltroPeriodo] = useState('semana')
+
+  const navigate = useNavigate()
 
   useEffect(() => {
-    carregar();
-  }, []);
+    carregar()
+  }, [])
 
   async function carregar() {
-    const data = await listarOrdens();
-    setOrdens(data);
+
+    const data = await listarOrdens()
+    setOrdens(data)
+
   }
 
   function filtrarPorPeriodo(ordem) {
-    if (filtroPeriodo === 'tudo') return true;
-    if (!ordem.data_abertura) return false;
 
-    const dataOrdem = new Date(ordem.data_abertura);
-    const hoje = new Date();
+    if (filtroPeriodo === 'tudo') return true
+    if (!ordem.data_abertura) return false
 
-    if (isNaN(dataOrdem)) return false;
+    const dataOrdem = new Date(ordem.data_abertura)
+    const hoje = new Date()
 
     if (filtroPeriodo === 'semana') {
-      const seteDiasAtras = new Date();
-      seteDiasAtras.setDate(hoje.getDate() - 7);
-      return dataOrdem >= seteDiasAtras;
+
+      const seteDiasAtras = new Date()
+      seteDiasAtras.setDate(hoje.getDate() - 7)
+
+      return dataOrdem >= seteDiasAtras
+
     }
 
     if (filtroPeriodo === 'mes') {
+
       return (
         dataOrdem.getMonth() === hoje.getMonth() &&
         dataOrdem.getFullYear() === hoje.getFullYear()
-      );
+      )
+
     }
 
-    return true;
+    return true
+
   }
 
   const ordensFiltradas = useMemo(() => {
+
     return ordens.filter((o) => {
+
       const statusOk =
-        filtroStatus === 'todas' || o.status === filtroStatus;
+        filtroStatus === 'todas' || o.status === filtroStatus
 
-      const periodoOk = filtrarPorPeriodo(o);
+      const periodoOk = filtrarPorPeriodo(o)
 
-      return statusOk && periodoOk;
-    });
-  }, [ordens, filtroStatus, filtroPeriodo]);
+      return statusOk && periodoOk
 
-  const totalAbertas = useMemo(() => {
+    })
+
+  }, [ordens, filtroStatus, filtroPeriodo])
+
+  const totalEntradas = useMemo(() => {
+
     return ordensFiltradas.reduce((total, o) => {
+
       if (o.status !== 'cancelada') {
-        return total + Number(o.valor_total);
+        return total + Number(o.valor_total)
       }
-      return total;
-    }, 0);
-  }, [ordensFiltradas]);
+
+      return total
+
+    }, 0)
+
+  }, [ordensFiltradas])
 
   return (
+
     <div className="page">
+
       <div className="page-header">
-        <h1>Ordens</h1>
-        <p>Controle de ordens por período e status</p>
+        <h1>Entradas</h1>
+        <p>Controle de entradas por período e status</p>
       </div>
 
-      {/* CONTROLES */}
       <div className="ordens-controls">
 
         <div className="controls-group">
+
           <button
             className={`btn ${filtroStatus === 'aberta' ? 'btn-primary' : ''}`}
             onClick={() => setFiltroStatus('aberta')}
@@ -84,9 +103,7 @@ export default function OrdensList() {
           </button>
 
           <button
-            className={`btn ${
-              filtroStatus === 'cancelada' ? 'btn-danger' : ''
-            }`}
+            className={`btn ${filtroStatus === 'cancelada' ? 'btn-danger' : ''}`}
             onClick={() => setFiltroStatus('cancelada')}
           >
             Canceladas
@@ -98,22 +115,20 @@ export default function OrdensList() {
           >
             Todas
           </button>
+
         </div>
 
         <div className="controls-group">
+
           <button
-            className={`btn ${
-              filtroPeriodo === 'semana' ? 'btn-primary' : ''
-            }`}
+            className={`btn ${filtroPeriodo === 'semana' ? 'btn-primary' : ''}`}
             onClick={() => setFiltroPeriodo('semana')}
           >
             Semana
           </button>
 
           <button
-            className={`btn ${
-              filtroPeriodo === 'mes' ? 'btn-primary' : ''
-            }`}
+            className={`btn ${filtroPeriodo === 'mes' ? 'btn-primary' : ''}`}
             onClick={() => setFiltroPeriodo('mes')}
           >
             Mês
@@ -125,26 +140,39 @@ export default function OrdensList() {
           >
             Tudo
           </button>
+
         </div>
 
         <div className="controls-summary">
+
           <strong className="total-value">
-            Total: R$ {totalAbertas.toFixed(2)}
+            Total: R$ {totalEntradas.toFixed(2)}
           </strong>
 
           <button
             className="btn btn-primary"
             onClick={() => navigate('/ordens/nova')}
           >
-            Nova Ordem
+            + Entrada Serviço
           </button>
+
+          <button
+  className="btn"
+  onClick={() => navigate('/ordens/entrada-rapida')}
+>
+  + Entrada Rápida
+</button>
+
         </div>
 
       </div>
 
       <div className="page-content">
+
         <div className="table-wrapper">
+
           <table className="responsive-table">
+
             <thead>
               <tr>
                 <th>#</th>
@@ -157,8 +185,11 @@ export default function OrdensList() {
             </thead>
 
             <tbody>
+
               {ordensFiltradas.map((o) => (
+
                 <tr key={o.id}>
+
                   <td>{o.id}</td>
 
                   <td>
@@ -167,13 +198,12 @@ export default function OrdensList() {
                       : '-'}
                   </td>
 
-                  {/* ✅ CORREÇÃO AQUI */}
                   <td>
                     {o.cliente_nome
                       ? o.cliente_nome
                       : o.cliente_id
-                      ? `Cliente #${o.cliente_id}`
-                      : '-'}
+                        ? `Cliente #${o.cliente_id}`
+                        : '-'}
                   </td>
 
                   <td>
@@ -185,27 +215,40 @@ export default function OrdensList() {
                   </td>
 
                   <td>
+
                     <button
                       className="btn"
                       onClick={() => navigate(`/ordens/${o.id}`)}
                     >
                       Ver
                     </button>
+
                   </td>
+
                 </tr>
+
               ))}
 
               {ordensFiltradas.length === 0 && (
+
                 <tr>
                   <td colSpan="6" className="empty-cell">
-                    Nenhuma ordem encontrada
+                    Nenhuma entrada encontrada
                   </td>
                 </tr>
+
               )}
+
             </tbody>
+
           </table>
+
         </div>
+
       </div>
+
     </div>
-  );
+
+  )
+
 }

@@ -14,6 +14,8 @@ import DashboardHome from '../pages/Dashboard/DashboardHome';
 import OrdensList from '../pages/Ordens/OrdensList';
 import CriarOrdem from '../pages/Ordens/CriarOrdem';
 import OrdemDetalhe from '../pages/Ordens/OrdemDetalhe';
+import EntradaRapida from '../pages/Ordens/EntradaRapida'
+
 
 // Pages – Produtos
 import ProdutosPage from '../pages/Produtos/ProdutosPage';
@@ -28,6 +30,8 @@ import ClienteDetalhe from '../pages/Clientes/ClienteDetalhe';
 // Pages – Financeiro
 import FinanceiroPage from '../pages/Financeiro/FinanceiroPage';
 import FinanceiroExtraPage from '../pages/FinanceiroExtra/FinanceiroExtraPage';
+import FinanceiroRelatorioPage from '../pages/Financeiro/FinanceiroRelatorioPage'
+import LancamentosFuturosPage from '../pages/Financeiro/LancamentosFuturosPage'
 
 // Pages – Auditoria
 import AuditoriaPage from '../pages/Auditoria/AuditoriaPage';
@@ -79,6 +83,8 @@ export default function AppRoutes() {
           <Route path="/ordens" element={<OrdensList />} />
           <Route path="/ordens/nova" element={<CriarOrdem />} />
           <Route path="/ordens/:id" element={<OrdemDetalhe />} />
+          <Route path="/ordens/entrada-rapida" element={<EntradaRapida />} />
+          
 
           {/* Produtos */}
           <Route path="/produtos" element={<ProdutosPage />} />
@@ -93,7 +99,8 @@ export default function AppRoutes() {
           {/* Financeiro */}
           <Route path="/financeiro" element={<FinanceiroPage />} />
           <Route path="/financeiro-extra" element={<FinanceiroExtraPage />} />
-
+          <Route path="/financeiro/relatorio" element={<FinanceiroRelatorioPage />} />
+           <Route path="/lancamentos-futuros"element={<LancamentosFuturosPage />}/>
 
           {/* Auditoria */}
           <Route path="/auditoria" element={<AuditoriaPage />} />

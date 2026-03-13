@@ -1,14 +1,15 @@
-import api from '../lib/api';
+import api from '../lib/api'
 
 /**
  * ============================
  * LISTAR TODOS OS MOVIMENTOS
- * (com contexto de ordem)
  * ============================
  */
 export async function listarMovimentos() {
-  const { data } = await api.get('/financeiro');
-  return data;
+
+  const { data } = await api.get('/financeiro')
+  return data
+
 }
 
 /**
@@ -17,17 +18,45 @@ export async function listarMovimentos() {
  * ============================
  */
 export async function listarMovimentosPorOrdem(ordemId) {
-  const { data } = await api.get(`/financeiro/ordem/${ordemId}`);
-  return data;
+
+  const { data } = await api.get(`/financeiro/ordem/${ordemId}`)
+  return data
+
 }
 
 /**
  * ============================
- * RESUMO FINANCEIRO REAL
- * (entradas válidas, canceladas, estornos)
+ * RESUMO FINANCEIRO
  * ============================
  */
 export async function resumoFinanceiro() {
-  const { data } = await api.get('/financeiro/resumo');
-  return data;
+
+  const { data } = await api.get('/financeiro/resumo')
+  return data
+
+}
+
+/**
+ * ============================
+ * CRIAR ENTRADA MANUAL
+ * ============================
+ */
+export async function criarEntradaManual(payload) {
+
+  const { data } = await api.post('/financeiro/entrada-manual', payload)
+  return data
+
+}
+
+/**
+ * ============================
+ * REGISTRAR DESPESA DIRETA
+ * (caso use no futuro)
+ * ============================
+ */
+export async function criarDespesa(payload) {
+
+  const { data } = await api.post('/financeiro/despesa', payload)
+  return data
+
 }

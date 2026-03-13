@@ -1,0 +1,219 @@
+/* =========================
+   CARDS DO DASHBOARD
+========================= */
+
+.relatorio-cards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.relatorio-cards .card {
+  flex: 1;
+  min-width: 200px;
+  padding: 18px;
+  border-radius: 10px;
+  background: var(--card-bg, #1f2937);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.relatorio-cards .card h3 {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+.relatorio-cards .card strong {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* cores */
+
+.relatorio-cards .entrada {
+  border-left: 4px solid #22c55e;
+}
+
+.relatorio-cards .despesa {
+  border-left: 4px solid #ef4444;
+}
+
+.relatorio-cards .saldo {
+  border-left: 4px solid #38bdf8;
+}
+
+.relatorio-cards .margem {
+  border-left: 4px solid #f59e0b;
+}
+
+
+/* =========================
+   FILTROS
+========================= */
+
+.relatorio-filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.relatorio-filtros .btn {
+  flex: none;
+}
+
+
+/* =========================
+   INSIGHTS
+========================= */
+
+.relatorio-insights {
+  margin-bottom: 20px;
+  padding: 18px;
+}
+
+.relatorio-insights h3 {
+  margin-bottom: 10px;
+}
+
+.relatorio-insights p {
+  margin-bottom: 6px;
+  opacity: 0.9;
+}
+
+
+/* =========================
+   AÇÕES
+========================= */
+
+.relatorio-acoes {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+
+/* =========================
+   TABELAS
+========================= */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+.responsive-table thead {
+  background: rgba(255,255,255,0.05);
+}
+
+.responsive-table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 14px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.responsive-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  white-space: nowrap;
+}
+
+
+/* =========================
+   VALORES
+========================= */
+
+.valor-entrada {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.valor-saida {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+
+/* =========================
+   GRÁFICOS FUTUROS
+========================= */
+
+.relatorio-graficos {
+  margin-top: 20px;
+  padding: 18px;
+  opacity: 0.8;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 1024px) {
+
+  .relatorio-cards .card strong {
+    font-size: 20px;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .relatorio-cards {
+    flex-direction: column;
+  }
+
+  .relatorio-acoes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .relatorio-acoes .btn {
+    width: 100%;
+  }
+
+  .relatorio-filtros {
+    flex-direction: column;
+  }
+
+  .relatorio-filtros .btn {
+    width: 100%;
+  }
+
+  .responsive-table {
+    min-width: 650px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .relatorio-cards .card {
+    padding: 16px;
+  }
+
+  .relatorio-cards .card strong {
+    font-size: 18px;
+  }
+
+  .relatorio-cards .card h3 {
+    font-size: 13px;
+  }
+
+  .responsive-table th,
+  .responsive-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+}

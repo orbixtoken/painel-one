@@ -1,127 +1,115 @@
-import { useEffect, useState, useMemo } from 'react';
-import { listarMovimentos } from '../../api/financeiro';
-import BadgeStatus from '../../components/BadgeStatus';
-import './FinanceiroPage.css';
+import { useEffect, useState, useMemo } from 'react'
+import { listarMovimentos } from '../../api/financeiro'
+import { useNavigate } from 'react-router-dom'
+
+import './FinanceiroPage.css'
 
 export default function FinanceiroPage() {
-  const [ordensFinanceiras, setOrdensFinanceiras] = useState([]);
-  const [filtroStatus, setFiltroStatus] = useState('aberta');
-  const [filtroPeriodo, setFiltroPeriodo] = useState('semana');
+
+  const navigate = useNavigate()
+
+  const [movimentos, setMovimentos] = useState([])
+  const [filtroPeriodo, setFiltroPeriodo] = useState('semana')
 
   useEffect(() => {
-    carregar();
-  }, []);
+    carregar()
+  }, [])
 
   async function carregar() {
-    const movimentos = await listarMovimentos();
 
-    const agrupado = {};
+    const data = await listarMovimentos()
+    setMovimentos(data)
 
-    for (const m of movimentos) {
-      if (!agrupado[m.ordem_id]) {
-        agrupado[m.ordem_id] = {
-          ordem_id: m.ordem_id,
-          ordem_status: m.ordem_status,
-          tipo_composicao: m.tipo_composicao,
-          data: m.criado_em,
-          entrada: 0,
-          estorno: 0,
-        };
-      }
-
-      if (new Date(m.criado_em) < new Date(agrupado[m.ordem_id].data)) {
-        agrupado[m.ordem_id].data = m.criado_em;
-      }
-
-      if (m.tipo === 'entrada') {
-        agrupado[m.ordem_id].entrada += Number(m.valor);
-      }
-
-      if (m.tipo === 'estorno') {
-        agrupado[m.ordem_id].estorno += Number(m.valor);
-      }
-    }
-
-    setOrdensFinanceiras(Object.values(agrupado));
   }
 
-  function filtrarPorPeriodo(ordem) {
-    if (filtroPeriodo === 'tudo') return true;
+  function limparDescricao(texto) {
 
-    const hoje = new Date();
-    const dataOrdem = new Date(ordem.data);
+    if (!texto) return ''
+
+    return texto
+      .replace(/DESPESA_ID:\d+/g, '')
+      .replace(/ENTRADA_ID:\d+/g, '')
+      .trim()
+
+  }
+
+  function filtrarPorPeriodo(m) {
+
+    if (filtroPeriodo === 'tudo') return true
+
+    const hoje = new Date()
+    const dataMov = new Date(m.criado_em)
 
     if (filtroPeriodo === 'semana') {
-      const seteDiasAtras = new Date();
-      seteDiasAtras.setDate(hoje.getDate() - 7);
-      return dataOrdem >= seteDiasAtras;
+
+      const seteDiasAtras = new Date()
+      seteDiasAtras.setDate(hoje.getDate() - 7)
+
+      return dataMov >= seteDiasAtras
+
     }
 
     if (filtroPeriodo === 'mes') {
+
       return (
-        dataOrdem.getMonth() === hoje.getMonth() &&
-        dataOrdem.getFullYear() === hoje.getFullYear()
-      );
+        dataMov.getMonth() === hoje.getMonth() &&
+        dataMov.getFullYear() === hoje.getFullYear()
+      )
+
     }
 
-    return true;
+    return true
+
   }
 
-  const ordensFiltradas = useMemo(() => {
-    return ordensFinanceiras.filter((o) => {
-      const statusOk =
-        filtroStatus === 'todas' || o.ordem_status === filtroStatus;
-      const periodoOk = filtrarPorPeriodo(o);
-      return statusOk && periodoOk;
-    });
-  }, [ordensFinanceiras, filtroStatus, filtroPeriodo]);
+  const movimentosFiltrados = useMemo(() => {
+    return movimentos.filter(filtrarPorPeriodo)
+  }, [movimentos, filtroPeriodo])
 
-  const totalAbertas = useMemo(() => {
-    return ordensFiltradas.reduce((total, o) => {
-      if (o.ordem_status !== 'cancelada') {
-        return total + (o.entrada - o.estorno);
-      }
-      return total;
-    }, 0);
-  }, [ordensFiltradas]);
+  const resumo = useMemo(() => {
+
+    let entradas = 0
+    let despesas = 0
+    let estornos = 0
+
+    for (const m of movimentosFiltrados) {
+
+      if (m.tipo === 'entrada') entradas += Number(m.valor)
+      if (m.tipo === 'despesa') despesas += Number(m.valor)
+      if (m.tipo === 'estorno') estornos += Number(m.valor)
+
+    }
+
+    return {
+      entradas,
+      despesas,
+      estornos,
+      saldo: entradas - despesas - estornos
+    }
+
+  }, [movimentosFiltrados])
 
   function imprimir() {
-    window.print();
+    window.print()
+  }
+
+  function abrirRelatorio() {
+    navigate('/financeiro/relatorio')
   }
 
   return (
+
     <div className="page">
+
       <div className="page-header">
         <h1>Financeiro</h1>
-        <p>Resumo financeiro por ordem</p>
+        <p>Fluxo financeiro da empresa</p>
       </div>
 
       <div className="financeiro-controls">
 
         <div className="controls-group">
-          <button
-            className={`btn ${filtroStatus === 'aberta' ? 'btn-primary' : ''}`}
-            onClick={() => setFiltroStatus('aberta')}
-          >
-            Abertas
-          </button>
 
-          <button
-            className={`btn ${filtroStatus === 'cancelada' ? 'btn-danger' : ''}`}
-            onClick={() => setFiltroStatus('cancelada')}
-          >
-            Canceladas
-          </button>
-
-          <button
-            className="btn"
-            onClick={() => setFiltroStatus('todas')}
-          >
-            Todas
-          </button>
-        </div>
-
-        <div className="controls-group">
           <button
             className={`btn ${filtroPeriodo === 'semana' ? 'btn-primary' : ''}`}
             onClick={() => setFiltroPeriodo('semana')}
@@ -142,76 +130,115 @@ export default function FinanceiroPage() {
           >
             Tudo
           </button>
+
         </div>
 
         <div className="controls-summary">
-          <strong className="total-value">
-            Total: R$ {totalAbertas.toFixed(2)}
-          </strong>
 
-          <button className="btn" onClick={imprimir}>
+          <div className="finance-summary">
+
+            <span className="entrada">
+              Entradas: R$ {resumo.entradas.toFixed(2)}
+            </span>
+
+            <span className="despesa">
+              Despesas: R$ {resumo.despesas.toFixed(2)}
+            </span>
+
+            <span className="saldo">
+              Saldo: R$ {resumo.saldo.toFixed(2)}
+            </span>
+
+          </div>
+
+          <button
+            className="btn btn-primary"
+            onClick={abrirRelatorio}
+          >
+            Relatórios
+          </button>
+
+          <button
+            className="btn"
+            onClick={imprimir}
+          >
             Imprimir
           </button>
+
         </div>
 
       </div>
 
       <div className="page-content">
+
         <div className="table-wrapper">
+
           <table className="responsive-table">
+
             <thead>
               <tr>
-                <th>Ordem</th>
                 <th>Data</th>
                 <th>Tipo</th>
-                <th>Entrada</th>
-                <th>Estorno</th>
-                <th>Saldo</th>
-                <th>Status</th>
+                <th>Descrição</th>
+                <th>Valor</th>
               </tr>
             </thead>
 
             <tbody>
-              {ordensFiltradas.map((o) => {
-                const saldo =
-                  o.ordem_status === 'cancelada'
-                    ? 0
-                    : o.entrada - o.estorno;
+
+              {movimentosFiltrados.map((m) => {
+
+                const valor =
+                  m.tipo === 'despesa' || m.tipo === 'estorno'
+                    ? -Number(m.valor)
+                    : Number(m.valor)
+
+                const descricaoLimpa = limparDescricao(m.descricao)
 
                 return (
-                  <tr key={o.ordem_id}>
-                    <td>#{o.ordem_id}</td>
-                    <td>{new Date(o.data).toLocaleString()}</td>
-                    <td className="tipo-col">
-                      {o.tipo_composicao}
-                    </td>
-                    <td className="valor-entrada">
-                      R$ {o.entrada.toFixed(2)}
-                    </td>
-                    <td className="valor-saida">
-                      R$ {o.estorno.toFixed(2)}
-                    </td>
-                    <td className="saldo-col">
-                      R$ {saldo.toFixed(2)}
-                    </td>
+
+                  <tr key={m.id}>
+
                     <td>
-                      <BadgeStatus status={o.ordem_status} />
+                      {new Date(m.criado_em).toLocaleString()}
                     </td>
+
+                    <td className="tipo-col">
+                      {m.tipo}
+                    </td>
+
+                    <td>
+                      {descricaoLimpa}
+                    </td>
+
+                    <td className={valor < 0 ? 'valor-saida' : 'valor-entrada'}>
+                      R$ {valor.toFixed(2)}
+                    </td>
+
                   </tr>
-                );
+
+                )
+
               })}
 
-              {ordensFiltradas.length === 0 && (
+              {movimentosFiltrados.length === 0 && (
                 <tr>
-                  <td colSpan="7" className="empty-cell">
+                  <td colSpan="4" className="empty-cell">
                     Nenhum registro encontrado
                   </td>
                 </tr>
               )}
+
             </tbody>
+
           </table>
+
         </div>
+
       </div>
+
     </div>
-  );
+
+  )
+
 }

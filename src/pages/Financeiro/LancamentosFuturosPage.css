@@ -1,0 +1,130 @@
+/* =========================
+   RESUMO SUPERIOR
+========================= */
+
+.resumo-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.resumo-card {
+  flex: 1;
+  min-width: 200px;
+  background: var(--card-bg, #1f2937);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.resumo-card strong {
+  display: block;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.resumo-card div {
+  margin-top: 6px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   FORMULÁRIO
+========================= */
+
+.financeiro-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(160px,1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.financeiro-form input,
+.financeiro-form select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #111827;
+  color: white;
+}
+
+.financeiro-form button {
+  white-space: nowrap;
+}
+
+
+/* =========================
+   TABELAS
+========================= */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.responsive-table thead {
+  background: rgba(255,255,255,0.05);
+}
+
+.responsive-table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 14px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.responsive-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  white-space: nowrap;
+}
+
+.responsive-table td button {
+  padding: 6px 10px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .resumo-grid {
+    flex-direction: column;
+  }
+
+  .financeiro-form {
+    grid-template-columns: 1fr;
+  }
+
+  .financeiro-form button {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .resumo-card div {
+    font-size: 18px;
+  }
+
+  .responsive-table th,
+  .responsive-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+}
