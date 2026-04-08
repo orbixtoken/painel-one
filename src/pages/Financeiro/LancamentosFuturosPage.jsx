@@ -130,7 +130,23 @@ export default function LancamentosFuturosPage() {
     }
 
   }
+   async function deletar(id){
 
+  if(!window.confirm('Deseja realmente excluir este lançamento?')) return
+
+  try{
+
+    await api.delete(`/lancamentos-futuros/${id}`)
+    carregar()
+
+  }catch(err){
+
+    console.error('Erro ao deletar lançamento',err)
+    alert('Erro ao deletar lançamento')
+
+  }
+
+}
 
 
   /* =========================
@@ -373,20 +389,23 @@ export default function LancamentosFuturosPage() {
                     R$ {Number(l.valor).toFixed(2)}
                   </td>
 
-                  <td>
+                 <td className="acoes">
 
-                    <button
-                      className="btn"
-                      onClick={()=>realizar(l.id,l.tipo)}
-                    >
+  <button
+    className="btn"
+    onClick={()=>realizar(l.id,l.tipo)}
+  >
+    {l.tipo === 'entrada' ? 'Recebido' : 'Pago'}
+  </button>
 
-                      {l.tipo === 'entrada'
-                        ? 'Recebido'
-                        : 'Pago'}
+  <button
+    className="btn btn-danger"
+    onClick={()=>deletar(l.id)}
+  >
+    Excluir
+  </button>
 
-                    </button>
-
-                  </td>
+</td>
 
                 </tr>
 

@@ -128,3 +128,13 @@
   }
 
 }
+
+.acoes {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
