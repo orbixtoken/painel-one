@@ -60,3 +60,18 @@ export async function criarDespesa(payload) {
   return data
 
 }
+
+/**
+ * ============================
+ * RELATÓRIO FINANCEIRO PROFISSIONAL
+ * ============================
+ */
+export async function relatorioFinanceiro(params = {}) {
+
+  const { data } = await api.get('/financeiro/relatorio', {
+    params
+  })
+
+  return data
+
+}
